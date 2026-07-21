@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WMS Hub — Painel Técnico Sankhya</title>
+<style>
+  :root{
+    --bg:#0b1220;
+    --bg-panel:#101a2e;
+    --bg-panel-2:#141f38;
+    --bg-raised:#182746;
+    --line:#223055;
+    --line-soft:#1b2947;
+    --text:#e7ecf7;
+    --text-dim:#93a1c4;
+    --text-faint:#5c6a90;
+    --amber:#f5b301;
+    --amber-dim:#7a5a02;
+    --cyan:#3ee0d6;
+    --cyan-dim:#0f5c58;
+    --danger:#ef5b5b;
+    --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;height:100%;}
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 100% -10%, #10254a33, transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:14px;
+    display:flex;
+    min-height:100vh;
+  }
+  ::selection{background:var(--amber);color:#1a1200;}
+
+  /* ---------- SIDEBAR ---------- */
+  .sidebar{
+    width:260px;
+    flex:none;
+    background:linear-gradient(180deg,#0d1526,#0a0f1c);
+    border-right:1px solid var(--line);
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    position:sticky;
+    top:0;
+  }
+  .brand{
+    padding:20px 18px 16px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .brand-tag{
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:.18em;
+    color:var(--amber);
+    text-transform:uppercase;
+    display:flex;align-items:center;gap:6px;
+  }
+  .brand-tag::before{content:"";width:7px;height:7px;background:var(--amber);display:inline-block;
+    clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);}
+  .brand-title{
+    font-size:19px;
+    font-weight:700;
+    margin-top:6px;
+    letter-spacing:-.01em;
+  }
+  .brand-sub{
+    font-size:11px;
+    color:var(--text-faint);
+    margin-top:3px;
+    font-family:var(--mono);
+  }
+
+  nav.menu{padding:14px 10px;flex:1;overflow-y:auto;}
+  .menu-group-label{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--text-faint);
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    padding:14px 10px 6px;
+  }
+  .menu-item{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 12px;
+    border-radius:8px;
+    color:var(--text-dim);
+    cursor:pointer;
+    font-size:13.5px;
+    font-weight:500;
+    margin-bottom:2px;
+    border:1px solid transparent;
+    transition:background .15s, color .15s, border-color .15s;
+    position:relative;
+  }
+  .menu-item .ico{
+    width:18px;height:18px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+    opacity:.85;
+  }
+  .menu-item:hover{background:var(--bg-panel);color:var(--text);}
+  .menu-item.active{
+    background:linear-gradient(90deg, #1c2a4d, #16213d);
+    color:var(--text);
+    border-color:var(--line);
+  }
+  .menu-item.active::before{
+    content:"";
+    position:absolute;left:-10px;top:8px;bottom:8px;width:3px;
+    background:var(--amber);border-radius:2px;
+  }
+  .menu-count{
+    margin-left:auto;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--text-faint);
+    background:var(--bg);
+    padding:1px 6px;
+    border-radius:20px;
+    border:1px solid var(--line);
+  }
+  .sidebar-foot{
+    padding:14px 18px;
+    border-top:1px solid var(--line-soft);
+    font-size:10.5px;
+    color:var(--text-faint);
+    font-family:var(--mono);
+    line-height:1.6;
+  }
+
+  /* ---------- MAIN ---------- */
+  main{flex:1;min-width:0;height:100vh;overflow-y:auto;}
+  .topbar{
+    position:sticky;top:0;z-index:5;
+    background:rgba(11,18,32,.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line-soft);
+    padding:16px 32px;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;
+  }
+  .topbar h1{font-size:17px;margin:0;font-weight:700;letter-spacing:-.01em;}
+  .topbar .crumb{font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:2px;}
+  .view{padding:28px 32px 80px;max-width:1180px;}
+  .view[hidden]{display:none;}
+
+  /* ---------- shared bits ---------- */
+  .search-box{
+    position:relative;
+    width:280px;
+  }
+  .search-box input{
+    width:100%;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 12px 9px 32px;
+    border-radius:8px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    outline:none;
+  }
+  .search-box input:focus{border-color:var(--cyan-dim);}
+  .search-box::before{
+    content:"⌕";
+    position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    color:var(--text-faint);font-size:14px;
+  }
+  .pill{
+    display:inline-flex;align-items:center;gap:5px;
+    font-family:var(--mono);font-size:10.5px;
+    padding:3px 9px;border-radius:20px;
+    border:1px solid var(--line);
+    color:var(--text-dim);background:var(--bg-panel);
+    cursor:pointer;user-select:none;
+    white-space:nowrap;
+  }
+  .pill.on{background:var(--amber);border-color:var(--amber);color:#1a1200;font-weight:700;}
+  .filter-row{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 20px;}
+
+  .card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+
+  code, .mono{font-family:var(--mono);}
+
+  /* ---------- HOME ---------- */
+  .hero{
+    padding:26px;border-radius:16px;
+    background:linear-gradient(135deg,#132242,#0d1730 60%);
+    border:1px solid var(--line);
+    position:relative;overflow:hidden;
+    margin-bottom:24px;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;
+    background:radial-gradient(circle, #f5b30122, transparent 70%);
+  }
+  .hero-eyebrow{font-family:var(--mono);font-size:11px;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;}
+  .hero h2{font-size:24px;margin:8px 0 6px;font-weight:800;letter-spacing:-.02em;}
+  .hero p{color:var(--text-dim);max-width:620px;line-height:1.6;font-size:13.5px;}
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:24px;}
+  .stat{padding:16px;border-radius:10px;background:var(--bg-panel-2);border:1px solid var(--line-soft);}
+  .stat .n{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--amber);}
+  .stat .l{font-size:11.5px;color:var(--text-dim);margin-top:2px;}
+
+  .home-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+  @media(max-width:900px){.home-grid{grid-template-columns:1fr;}}
+  .nav-card{
+    padding:18px;border-radius:12px;cursor:pointer;
+    display:flex;flex-direction:column;gap:6px;
+    transition:transform .15s, border-color .15s;
+  }
+  .nav-card:hover{transform:translateY(-2px);border-color:var(--cyan-dim);}
+  .nav-card .t{font-weight:700;font-size:14.5px;}
+  .nav-card .d{color:var(--text-dim);font-size:12.5px;line-height:1.5;}
+  .nav-card .arrow{margin-top:8px;font-family:var(--mono);color:var(--amber);font-size:12px;}
+
+  /* ---------- TABELAS ---------- */
+  .module-section{margin-bottom:22px;}
+  .module-head{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 14px;border-radius:9px 9px 0 0;
+    background:var(--bg-raised);
+    border:1px solid var(--line);border-bottom:none;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;
+    color:var(--amber);text-transform:uppercase;
+  }
+  .table-grid{
+    border:1px solid var(--line);border-radius:0 0 9px 9px;overflow:hidden;
+  }
+  .table-row{
+    display:grid;grid-template-columns:140px 1fr auto;gap:14px;align-items:center;
+    padding:11px 14px;border-top:1px solid var(--line-soft);
+    background:var(--bg-panel);
+    cursor:pointer;
+  }
+  .table-row:first-child{border-top:none;}
+  .table-row:hover{background:var(--bg-panel-2);}
+  .tag-code{
+    font-family:var(--mono);font-size:12px;font-weight:700;color:#0c1220;
+    background:linear-gradient(180deg,#ffd873,var(--amber));
+    padding:3px 8px;border-radius:5px;text-align:center;
+    letter-spacing:.02em;
+    box-shadow:0 1px 0 rgba(0,0,0,.2) inset;
+  }
+  .ent-name{font-size:13px;color:var(--text);}
+  .ent-desc{font-size:12px;color:var(--text-dim);margin-top:1px;}
+  .rel-badge{
+    font-family:var(--mono);font-size:10px;color:var(--cyan);
+    border:1px solid var(--cyan-dim);padding:2px 7px;border-radius:20px;
+    white-space:nowrap;
+  }
+  .no-rel{color:var(--text-faint);font-size:10px;font-family:var(--mono);}
+
+  /* table detail drawer */
+  .drawer-backdrop{
+    position:fixed;inset:0;background:#00040ccc;z-index:40;display:none;
+  }
+  .drawer-backdrop.show{display:block;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100vh;width:420px;max-width:92vw;
+    background:var(--bg-panel);border-left:1px solid var(--line);
+    z-index:41;transform:translateX(100%);transition:transform .25s ease;
+    padding:26px;overflow-y:auto;
+  }
+  .drawer.show{transform:translateX(0);}
+  .drawer-close{
+    position:absolute;top:20px;right:20px;cursor:pointer;color:var(--text-faint);
+    font-size:20px;line-height:1;
+  }
+  .drawer .tag-code{font-size:15px;padding:5px 10px;}
+  .drawer h3{margin:14px 0 2px;font-size:17px;}
+  .drawer .module-tag{font-family:var(--mono);font-size:10.5px;color:var(--text-faint);text-transform:uppercase;}
+  .drawer-section{margin-top:20px;}
+  .drawer-section h4{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--cyan);margin-bottom:8px;
+  }
+  .rel-item{
+    background:var(--bg-panel-2);border:1px solid var(--line-soft);border-radius:8px;
+    padding:10px 12px;margin-bottom:8px;font-size:12.5px;line-height:1.55;
+  }
+  .rel-item .arrow-line{font-family:var(--mono);color:var(--amber);font-size:12px;margin-bottom:4px;}
+
+  /* ---------- DIAGRAMA ---------- */
+  .diagram-wrap{
+    border:1px solid var(--line);border-radius:12px;background:var(--bg-panel);
+    padding:10px;overflow:auto;
+  }
+  .diagram-legend{display:flex;gap:18px;margin:14px 0 4px;flex-wrap:wrap;font-size:12px;color:var(--text-dim);}
+  .diagram-legend span{display:flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  /* ---------- GUIA ---------- */
+  .etapa-block{margin-bottom:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg-panel);}
+  .etapa-head{
+    display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;
+    background:var(--bg-raised);
+  }
+  .etapa-num{
+    font-family:var(--mono);font-weight:800;font-size:13px;color:#0c1220;
+    background:var(--amber);min-width:30px;height:30px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;flex:none;
+  }
+  .etapa-head .t{font-weight:700;font-size:14.5px;}
+  .etapa-head .chev{margin-left:auto;color:var(--text-faint);transition:transform .2s;font-size:12px;}
+  .etapa-block.open .chev{transform:rotate(90deg);}
+  .etapa-body{display:none;padding:18px;}
+  .etapa-block.open .etapa-body{display:block;}
+  .etapa-context{
+    font-size:12.5px;color:var(--text-dim);line-height:1.6;
+    background:var(--bg-panel-2);border-left:3px solid var(--cyan-dim);
+    padding:12px 14px;border-radius:0 8px 8px 0;margin-bottom:16px;
+  }
+  .sub-label{
+    font-family:var(--mono);font-size:10.5px;color:var(--amber);letter-spacing:.08em;
+    text-transform:uppercase;margin:16px 0 8px;
+  }
+  .sub-label:first-child{margin-top:0;}
+  .cfg-item{
+    border:1px solid var(--line-soft);border-radius:9px;padding:12px 14px;margin-bottom:8px;
+    background:var(--bg-panel-2);
+  }
+  .cfg-item .it{font-weight:600;font-size:13px;margin-bottom:5px;}
+  .cfg-item .im{font-size:12.5px;color:var(--text-dim);line-height:1.55;margin-bottom:8px;}
+  .cfg-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:11px;}
+  .cfg-meta .rt{
+    font-family:var(--mono);color:var(--cyan);background:var(--bg);
+    border:1px solid var(--cyan-dim);padding:3px 8px;border-radius:6px;
+  }
+  .cfg-meta a{
+    font-family:var(--mono);color:var(--amber);text-decoration:none;
+    border:1px solid var(--amber-dim);padding:3px 8px;border-radius:6px;
+  }
+  .cfg-meta a:hover{background:var(--amber);color:#1a1200;}
+  .pontos-list{list-style:none;padding:0;margin:0;}
+  .pontos-list li{
+    display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line-soft);
+    font-size:12.5px;color:var(--text-dim);line-height:1.55;
+  }
+  .pontos-list li:first-child{border-top:none;}
+  .pontos-list li::before{content:"⚠";color:var(--danger);flex:none;}
+
+  /* scrollbar */
+  ::-webkit-scrollbar{width:9px;height:9px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:#243252;border-radius:6px;}
+  ::-webkit-scrollbar-thumb:hover{background:#2e4066;}
+
+  /* ---------- INSERIR / IA ---------- */
+  .kb-form{max-width:680px;}
+  .kb-form label{
+    display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--text-faint);margin:16px 0 6px;
+  }
+  .kb-form label:first-child{margin-top:0;}
+  .kb-form input[type=text], .kb-form textarea, .kb-form select{
+    width:100%;background:var(--bg-panel);border:1px solid var(--line);color:var(--text);
+    padding:11px 13px;border-radius:9px;font-family:var(--sans);font-size:13.5px;outline:none;
+    resize:vertical;
+  }
+  .kb-form textarea{min-height:150px;line-height:1.55;}
+  .kb-form input:focus, .kb-form textarea:focus, .kb-form select:focus{border-color:var(--cyan-dim);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--amber);color:#1a1200;border:none;
+    padding:11px 20px;border-radius:9px;font-weight:700;font-size:13px;cursor:pointer;
+    font-family:var(--sans);
+  }
+  .btn:hover{background:#ffc633;}
+  .btn.ghost{
+    background:transparent;color:var(--text-dim);border:1px solid var(--line);
+  }
+  .btn.ghost:hover{color:var(--text);border-color:var(--cyan-dim);}
+  .btn.small{padding:6px 12px;font-size:11.5px;border-radius:7px;}
+
+  .analysis-box{
+    margin-top:20px;padding:16px;border-radius:11px;
+    background:var(--bg-panel-2);border:1px solid var(--line-soft);
+    display:none;
+  }
+  .analysis-box.show{display:block;}
+  .analysis-head{font-family:var(--mono);font-size:10.5px;color:var(--cyan);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+  .cat-score-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;font-size:12px;}
+  .cat-score-row .lbl{width:190px;flex:none;color:var(--text-dim);}
+  .cat-score-bar-wrap{flex:1;height:7px;background:var(--bg);border-radius:4px;overflow:hidden;}
+  .cat-score-bar{height:100%;border-radius:4px;}
+  .cat-score-val{width:34px;text-align:right;font-family:var(--mono);color:var(--text-faint);font-size:11px;}
+  .detected-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .suggestion-banner{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    background:var(--bg-raised);border:1px solid var(--amber-dim);border-radius:9px;
+    padding:12px 14px;margin-top:14px;font-size:12.5px;
+  }
+  .suggestion-banner b{color:var(--amber);}
+
+  .kb-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .kb-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+  .kb-col{border:1px solid var(--line);border-radius:12px;background:var(--bg-panel);overflow:hidden;min-height:120px;}
+  .kb-col-head{
+    padding:12px 14px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;
+    text-transform:uppercase;display:flex;align-items:center;gap:8px;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .kb-col-head .dot{width:8px;height:8px;border-radius:50%;flex:none;}
+  .kb-col-head .n{margin-left:auto;font-family:var(--mono);color:var(--text-faint);}
+  .kb-col-body{padding:10px;display:flex;flex-direction:column;gap:8px;max-height:520px;overflow-y:auto;}
+  .kb-entry{
+    background:var(--bg-panel-2);border:1px solid var(--line-soft);border-radius:9px;
+    padding:11px 12px;font-size:12.5px;cursor:pointer;
+  }
+  .kb-entry:hover{border-color:var(--cyan-dim);}
+  .kb-entry .tt{font-weight:600;margin-bottom:3px;color:var(--text);}
+  .kb-entry .tx{color:var(--text-dim);font-size:11.5px;line-height:1.5;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+  .kb-entry .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;}
+  .kb-entry .meta .tg{font-family:var(--mono);font-size:9.5px;color:var(--amber);
+    border:1px solid var(--amber-dim);padding:1px 6px;border-radius:12px;}
+  .kb-empty{color:var(--text-faint);font-size:11.5px;padding:16px;text-align:center;font-family:var(--mono);}
+
+  @media(max-width:760px){
+    .sidebar{position:fixed;left:-260px;transition:left .2s;z-index:50;}
+    .sidebar.open{left:0;}
+    .view{padding:20px 16px 60px;}
+    .topbar{padding:14px 16px;}
+    .table-row{grid-template-columns:100px 1fr;}
+    .rel-badge{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <div class="brand-tag">WMS · Sankhya</div>
+    <div class="brand-title">WMS Hub</div>
+    <div class="brand-sub">AXL IntraLog / Panice Tecnologia</div>
+  </div>
+  <nav class="menu" id="menu">
+    <div class="menu-group-label">Visão Geral</div>
+    <div class="menu-item active" data-view="home"><span class="ico">◆</span>Início</div>
+
+    <div class="menu-group-label">Base de Dados</div>
+    <div class="menu-item" data-view="tabelas"><span class="ico">▤</span>Explorador de Tabelas<span class="menu-count" id="cnt-tabelas"></span></div>
+    <div class="menu-item" data-view="diagrama"><span class="ico">◈</span>Diagrama de Relações</div>
+
+    <div class="menu-group-label">Implantação</div>
+    <div class="menu-item" data-view="guia"><span class="ico">▦</span>Guia de Configuração<span class="menu-count" id="cnt-etapas"></span></div>
+
+    <div class="menu-group-label">IA do Processo</div>
+    <div class="menu-item" data-view="inserir"><span class="ico">✎</span>Inserir Informação</div>
+    <div class="menu-item" data-view="conhecimento"><span class="ico">◧</span>Base de Conhecimento<span class="menu-count" id="cnt-kb"></span></div>
+  </nav>
+  <div class="sidebar-foot">
+    Dicionário de tabelas + guia de implantação<br>WMS Sankhya · uso interno
+  </div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div>
+      <h1 id="topbar-title">Início</h1>
+      <div class="crumb" id="topbar-crumb">wms-hub / painel</div>
+    </div>
+    <div class="search-box" id="global-search-wrap" style="display:none;">
+      <input type="text" id="global-search" placeholder="buscar tabela, entidade ou campo...">
+    </div>
+  </div>
+
+  <!-- HOME -->
+  <section class="view" id="view-home">
+    <div class="hero">
+      <div class="hero-eyebrow">Painel técnico de implantação</div>
+      <h2>Hub de referência do WMS Sankhya</h2>
+      <p>Dicionário de tabelas físicas, mapa de relacionamentos entre entidades e o passo a passo de configuração
+      para implantação — tudo num único lugar, pra consulta rápida durante projeto.</p>
+      <div class="stat-grid">
+        <div class="stat"><div class="n" id="stat-tabelas">–</div><div class="l">entidades mapeadas</div></div>
+        <div class="stat"><div class="n" id="stat-modulos">–</div><div class="l">módulos do WMS</div></div>
+        <div class="stat"><div class="n" id="stat-rel">–</div><div class="l">relacionamentos documentados</div></div>
+        <div class="stat"><div class="n" id="stat-etapas">–</div><div class="l">etapas de implantação</div></div>
+        <div class="stat"><div class="n" id="stat-kb">–</div><div class="l">informações na base de conhecimento</div></div>
+      </div>
+    </div>
+
+    <div class="home-grid">
+      <div class="card nav-card" data-view="tabelas">
+        <div class="t">▤ Explorador de Tabelas</div>
+        <div class="d">Dicionário completo — entidade lógica, descrição e tabela física (TGWxxx), organizado por módulo (Separação, Armazenagem, Tarefas, Conferências, Estoque...).</div>
+        <div class="arrow">abrir explorador →</div>
+      </div>
+      <div class="card nav-card" data-view="diagrama">
+        <div class="t">◈ Diagrama de Relações</div>
+        <div class="d">Mapa visual das ligações reais entre as tabelas: chaves de junção, tabelas históricas, cascata de flags UTILIZAWMS e mais.</div>
+        <div class="arrow">ver diagrama →</div>
+      </div>
+      <div class="card nav-card" data-view="guia">
+        <div class="t">▦ Guia de Configuração</div>
+        <div class="d">As 7 etapas de configuração antes de movimentar o WMS — endereços, empresa, equipamentos, regras de armazenagem, expedição e modelos fiscais.</div>
+        <div class="arrow">abrir guia →</div>
+      </div>
+      <div class="card nav-card" data-view="guia" data-target-pontos="1">
+        <div class="t">⚠ Pontos de Atenção</div>
+        <div class="d">Checklist final de boas práticas — o que revisar antes de liberar o WMS em produção (endereços especiais, docas, checkout, picking).</div>
+        <div class="arrow">ver checklist →</div>
+      </div>
+      <div class="card nav-card" data-view="inserir">
+        <div class="t">✎ Inserir Informação (IA)</div>
+        <div class="d">Cole uma anotação, regra ou dúvida — a IA classifica automaticamente na etapa certa do processo físico do CD (Recebimento, Armazenagem, Movimentação, Picking, Packing, Expedição).</div>
+        <div class="arrow">adicionar informação →</div>
+      </div>
+      <div class="card nav-card" data-view="conhecimento">
+        <div class="t">◧ Base de Conhecimento</div>
+        <div class="d">Tudo que já foi registrado, organizado em quadro por etapa do processo — pesquisável e exportável.</div>
+        <div class="arrow">ver base →</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABELAS -->
+  <section class="view" id="view-tabelas" hidden>
+    <div class="filter-row" id="module-filters"></div>
+    <div id="tabelas-container"></div>
+  </section>
+
+  <!-- DIAGRAMA -->
+  <section class="view" id="view-diagrama" hidden>
+    <p style="color:var(--text-dim);font-size:13px;max-width:680px;line-height:1.6;">
+      Ligações reais entre as tabelas do WMS, baseadas na implementação em projetos anteriores — chaves de junção,
+      tabelas históricas e cascatas de configuração. Clique num nó pra ver o detalhe na tabela.
+    </p>
+    <div class="diagram-legend">
+      <span><span class="dot" style="background:var(--amber);"></span> Tabela WMS</span>
+      <span><span class="dot" style="background:var(--cyan);"></span> Ligação / chave de junção</span>
+    </div>
+    <div class="diagram-wrap" id="diagram-wrap"></div>
+  </section>
+
+  <!-- GUIA -->
+  <section class="view" id="view-guia" hidden>
+    <div id="guia-container"></div>
+  </section>
+
+  <!-- INSERIR INFORMAÇÃO -->
+  <section class="view" id="view-inserir" hidden>
+    <p style="color:var(--text-dim);font-size:13px;max-width:640px;line-height:1.6;margin-bottom:6px;">
+      Cole ou digite qualquer informação — uma regra do cliente, uma dúvida, um comportamento observado.
+      A IA analisa o texto, cruza com o dicionário de tabelas e sugere em qual etapa do processo físico
+      (Recebimento → Armazenagem → Movimentação → Picking → Packing → Expedição) essa informação se encaixa.
+    </p>
+    <div class="kb-form card" style="padding:20px;">
+      <label>Título (opcional)</label>
+      <input type="text" id="kb-titulo" placeholder="Ex: Regra de corte para cliente X">
+      <label>Informação</label>
+      <textarea id="kb-texto" placeholder="Ex: No cliente X, quando não há estoque no picking no envio da OC, o sistema deve buscar automaticamente no pulmão antes de gerar corte..."></textarea>
+      <div style="margin-top:14px;">
+        <button class="btn" id="kb-analisar-btn">◆ Analisar com IA</button>
+      </div>
+
+      <div class="analysis-box" id="kb-analysis">
+        <div class="analysis-head">Análise da IA — pontuação por etapa do processo</div>
+        <div id="kb-scores"></div>
+        <div id="kb-detected-wrap" style="display:none;">
+          <div class="analysis-head" style="margin-top:14px;">Tabelas / termos detectados</div>
+          <div class="detected-tags" id="kb-detected"></div>
+        </div>
+        <div class="suggestion-banner" id="kb-suggestion"></div>
+
+        <label style="margin-top:16px;">Confirmar / corrigir etapa</label>
+        <select id="kb-categoria-final"></select>
+
+        <div style="margin-top:16px;display:flex;gap:10px;">
+          <button class="btn" id="kb-salvar-btn">✓ Salvar na Base de Conhecimento</button>
+          <button class="btn ghost" id="kb-cancelar-btn">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BASE DE CONHECIMENTO -->
+  <section class="view" id="view-conhecimento" hidden>
+    <div class="kb-toolbar">
+      <div class="search-box" style="width:260px;">
+        <input type="text" id="kb-search" placeholder="buscar na base de conhecimento...">
+      </div>
+      <button class="btn small" data-view="inserir">+ Nova informação</button>
+      <button class="btn ghost small" id="kb-export-btn">Exportar JSON</button>
+      <button class="btn ghost small" id="kb-import-btn">Importar JSON</button>
+      <input type="file" id="kb-import-file" accept="application/json" style="display:none;">
+    </div>
+    <div class="kb-board" id="kb-board"></div>
+  </section>
+</main>
+
+<div class="drawer-backdrop" id="drawer-backdrop"></div>
+<div class="drawer" id="drawer">
+  <span class="drawer-close" id="drawer-close">✕</span>
+  <div id="drawer-content"></div>
+</div>
+
+<!-- Firebase (Firestore) — base de conhecimento compartilhada -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAry9uXnmKI121f6xGyp1XFuDKVgY-wB64",
+    authDomain: "axlgp-a8503.firebaseapp.com",
+    projectId: "axlgp-a8503",
+    storageBucket: "axlgp-a8503.firebasestorage.app",
+    messagingSenderId: "374027939791",
+    appId: "1:374027939791:web:bc2b30f13aad99b9222cba",
+    measurementId: "G-1ZCWVC5Q80"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+
+<script src="data.js"></script>
+<script src="kb_data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
