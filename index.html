@@ -428,6 +428,49 @@
     border:1px solid var(--amber-dim);padding:1px 6px;border-radius:12px;}
   .kb-empty{color:var(--text-faint);font-size:11.5px;padding:16px;text-align:center;font-family:var(--mono);}
 
+  /* ---------- CHECKLIST DETALHADO ---------- */
+  .trilhas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-bottom:26px;}
+  .trilha-card{border:1px solid var(--line);border-radius:12px;background:var(--bg-panel);padding:16px;}
+  .trilha-card h4{margin:0 0 10px;font-size:13px;color:var(--cyan);font-family:var(--mono);text-transform:uppercase;letter-spacing:.05em;}
+  .trilha-item{margin-bottom:10px;font-size:12px;line-height:1.5;}
+  .trilha-item .tt{font-weight:600;color:var(--text);margin-bottom:2px;}
+  .trilha-item .tx{color:var(--text-dim);}
+
+  .macro-label{
+    font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--amber);margin:22px 0 10px;display:flex;align-items:center;gap:10px;
+  }
+  .macro-label::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  .chk-cat{border:1px solid var(--line);border-radius:12px;background:var(--bg-panel);margin-bottom:12px;overflow:hidden;}
+  .chk-cat-head{
+    padding:13px 16px;background:var(--bg-raised);cursor:pointer;
+    display:flex;align-items:center;gap:10px;font-weight:700;font-size:13.5px;
+  }
+  .chk-cat-head .n{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--text-faint);font-weight:400;}
+  .chk-cat-head .chev{color:var(--text-faint);transition:transform .2s;font-size:11px;}
+  .chk-cat.open .chev{transform:rotate(90deg);}
+  .chk-cat-body{display:none;padding:14px 16px;}
+  .chk-cat.open .chk-cat-body{display:block;}
+  .chk-sub-label{
+    font-family:var(--mono);font-size:10px;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;
+    margin:14px 0 8px;
+  }
+  .chk-sub-label:first-child{margin-top:0;}
+  .chk-item{
+    border:1px solid var(--line-soft);border-radius:8px;padding:10px 12px;margin-bottom:7px;
+    background:var(--bg-panel-2);font-size:12.5px;
+  }
+  .chk-item .it{font-weight:600;margin-bottom:4px;}
+  .chk-item .meta-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .chk-item .meta-row span{
+    font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:6px;
+    border:1px solid var(--line-soft);color:var(--text-dim);
+  }
+  .chk-item .meta-row .rt{color:var(--cyan);border-color:var(--cyan-dim);}
+  .chk-item .meta-row .vc{color:var(--amber);border-color:var(--amber-dim);}
+  .chk-item .obs{color:var(--text-dim);font-size:11.5px;margin-top:6px;line-height:1.5;white-space:pre-wrap;}
+
   @media(max-width:760px){
     .sidebar{position:fixed;left:-260px;transition:left .2s;z-index:50;}
     .sidebar.open{left:0;}
@@ -456,6 +499,7 @@
 
     <div class="menu-group-label">Implantação</div>
     <div class="menu-item" data-view="guia"><span class="ico">▦</span>Guia de Configuração<span class="menu-count" id="cnt-etapas"></span></div>
+    <div class="menu-item" data-view="checklist"><span class="ico">☑</span>Checklist Detalhado<span class="menu-count" id="cnt-checklist"></span></div>
 
     <div class="menu-group-label">IA do Processo</div>
     <div class="menu-item" data-view="inserir"><span class="ico">✎</span>Inserir Informação</div>
@@ -490,6 +534,7 @@
         <div class="stat"><div class="n" id="stat-rel">–</div><div class="l">relacionamentos documentados</div></div>
         <div class="stat"><div class="n" id="stat-etapas">–</div><div class="l">etapas de implantação</div></div>
         <div class="stat"><div class="n" id="stat-kb">–</div><div class="l">informações na base de conhecimento</div></div>
+        <div class="stat"><div class="n" id="stat-checklist">–</div><div class="l">itens no checklist detalhado</div></div>
       </div>
     </div>
 
@@ -513,6 +558,11 @@
         <div class="t">⚠ Pontos de Atenção</div>
         <div class="d">Checklist final de boas práticas — o que revisar antes de liberar o WMS em produção (endereços especiais, docas, checkout, picking).</div>
         <div class="arrow">ver checklist →</div>
+      </div>
+      <div class="card nav-card" data-view="checklist">
+        <div class="t">☑ Checklist Detalhado</div>
+        <div class="d">O passo a passo completo de implantação: pré-requisitos no ERP (produto, locais, TOP) e todas as configurações do WMS, rotina por rotina.</div>
+        <div class="arrow">ver checklist detalhado →</div>
       </div>
       <div class="card nav-card" data-view="inserir">
         <div class="t">✎ Inserir Informação (IA)</div>
@@ -600,6 +650,15 @@
     </div>
     <div class="kb-board" id="kb-board"></div>
   </section>
+
+  <!-- CHECKLIST DETALHADO -->
+  <section class="view" id="view-checklist" hidden>
+    <p style="color:var(--text-dim);font-size:13px;max-width:680px;line-height:1.6;margin-bottom:6px;">
+      Checklist granular de implantação — desde a preparação (boas práticas gerais) até a configuração
+      item a item no ERP e no WMS. Complementa o Guia de Configuração com o passo a passo operacional completo.
+    </p>
+    <div id="checklist-container"></div>
+  </section>
 </main>
 
 <div class="drawer-backdrop" id="drawer-backdrop"></div>
@@ -625,8 +684,802 @@
   const db = firebase.firestore();
 </script>
 
-<script src="data.js"></script>
-<script src="kb_data.js"></script>
-<script src="app.js"></script>
+<script>
+const DB_TABELAS = [{"modulo": "INVENTARIO", "itens": [{"entidade": "AjusteEstoque", "descricao": "Ajuste de Estoque", "tabela": "TGWAJE"}, {"entidade": "InventarioRotativo", "descricao": "Contagem para Inventário", "tabela": "TGWIVR"}, {"entidade": "InventarioWMS", "descricao": "Inventário do MGEWMS", "tabela": "TGWCTE"}, {"entidade": "Inventario", "descricao": "Inventário do WMS", "tabela": "TGWIVT"}, {"entidade": "InventarioSerieWMS", "descricao": "Inventário por série do MGEWMS", "tabela": "TGWIVRSER"}, {"entidade": "HistoricoAjustesWMS", "descricao": "HistoricoAjustesWMS", "tabela": "TGWHAJ"}]}, {"modulo": "RECEBIMENTO", "itens": [{"entidade": "ItemNotaRecebimento", "descricao": "Item Nota de Recebimento", "tabela": "TGWITER"}, {"entidade": "NotasRecebimento", "descricao": "Notas por Recebimento", "tabela": "TGWRXN"}, {"entidade": "Recebimento", "descricao": "Recebimento WMS", "tabela": "TGWREC"}]}, {"modulo": "ARMAZENAGEM", "itens": [{"entidade": "ValidacaoArmazenamentoExpresso", "descricao": "ValidacaoArmazenamentoExpresso", "tabela": "TGWVAE"}, {"entidade": "AreaArmazenagem", "descricao": "Área de Armazenagem", "tabela": "TGWARA"}, {"entidade": "Armazenagem", "descricao": "Armazenagem WMS", "tabela": "TGWARM"}, {"entidade": "ArmazenamentoExpresso", "descricao": "Armazenamento Expresso", "tabela": "TGWARE"}, {"entidade": "EnderecoUnidade", "descricao": "Endereço Armazenagem x Unidade", "tabela": "TGWEXU"}, {"entidade": "EnderecoArmazenagem", "descricao": "Endereço de Armazenamento", "tabela": "TGWEND"}, {"entidade": "EnderecoAreaArm", "descricao": "Endereços", "tabela": "TGWAXFE"}, {"entidade": "GruposProdutosAreaArm", "descricao": "Grupos de Produtos", "tabela": "TGWAXG"}, {"entidade": "ParceirosAreaArm", "descricao": "Parceiros", "tabela": "TGWAXPAR"}, {"entidade": "ProdutosAreaArm", "descricao": "Produtos", "tabela": "TGWAXP"}, {"entidade": "RegraArmazenagem", "descricao": "Regra de Armazenagem", "tabela": "TGWRFA"}, {"entidade": "RelacionamentoArmazenagem", "descricao": "Relacionamento da Armazenagem", "tabela": "TGWRARM"}]}, {"modulo": "TRANSFERENCIAS", "itens": [{"entidade": "TransferenciaWMS", "descricao": "Transferência WMS", "tabela": "TGWTRA"}]}, {"modulo": "REABASTECIMENTO", "itens": [{"entidade": "ReabastecimentoAgendado", "descricao": "Reabastecimento Agendado", "tabela": "TGWRAG"}, {"entidade": "ReabastecimentoPicking", "descricao": "Reabastecimento Picking", "tabela": "TGWREP"}]}, {"modulo": "TAREFAS", "itens": [{"entidade": "ExecutanteTarefa", "descricao": "Executante por Tarefa", "tabela": "TGWUXT"}, {"entidade": "ItemTarefa", "descricao": "Item da Tarefa do MGEWMS", "tabela": "TGWITT"}, {"entidade": "PesoVariavelTarefa", "descricao": "Peso Variável na Tarefa", "tabela": "TGWPTR"}, {"entidade": "TarefaExecucaoColetor", "descricao": "Tarefa em Execução no Coletor", "tabela": "TGWTEC"}, {"entidade": "TarefaEmTransito", "descricao": "Tarefa em Trânsito", "tabela": "TGWTRAN"}, {"entidade": "TarefaDependente", "descricao": "TarefaDependente do WMS", "tabela": "TGWTDP"}, {"entidade": "TarefasAntecessoras", "descricao": "Tarefas Antecessoras", "tabela": "TGWTDP"}, {"entidade": "Tarefa", "descricao": "Tarefas WMS", "tabela": "TGWTAR"}, {"entidade": "TarefaEquipamento", "descricao": "Tipo Tarefa X Tipo Equipamento", "tabela": "TGWTTE"}, {"entidade": "TipoTarefa", "descricao": "Tipos de Tarefa do WMS", "tabela": "TGWTTR"}, {"entidade": "UsuarioTarefa", "descricao": "Usuários X Tarefas do WMS", "tabela": "TGWUSU"}]}, {"modulo": "ETIQUETA/VOLUMES", "itens": [{"entidade": "ImpressaoEtiquetaSeparacao", "descricao": "Impressão Etiquetas de Separação", "tabela": "TGWIES"}, {"entidade": "RegistroEtiquetaVolume", "descricao": "Registro de Etiqueta de Volume", "tabela": "TGWREV"}, {"entidade": "ItemVolume", "descricao": "Item de Volume", "tabela": "TGWIVL"}, {"entidade": "PesoVolume", "descricao": "Peso do Volume", "tabela": "TGWPVOL"}, {"entidade": "RegistroEtiquetaVolume", "descricao": "Registro de Etiqueta de Volume", "tabela": "TGWREV"}]}, {"modulo": "CONFERENCIAS", "itens": [{"entidade": "AreaConferencia", "descricao": "Área de Conferência", "tabela": "TGWARC"}, {"entidade": "ConferenciaCega", "descricao": "Conferencia Cega de Produtos do WMS", "tabela": "TGWCON"}, {"entidade": "ConferenciaNaoConstaPedido", "descricao": "Conferência que não consta no pedido", "tabela": "TGWNCP"}, {"entidade": "Conferente", "descricao": "Conferentes", "tabela": "TGWUAC"}, {"entidade": "ItemConferidoColetor", "descricao": "Item Conferido no Coletor", "tabela": "TGWICC"}, {"entidade": "ItemConferencia", "descricao": "Item da conferência cega do MGEWMS", "tabela": "TGWCOI"}, {"entidade": "ItemConferenciaValidade", "descricao": "Item da conferência de Validade", "tabela": "TGWCOIVAL"}, {"entidade": "RegistroConferencia", "descricao": "Registro de Conferência", "tabela": "TGWRCON"}, {"entidade": "SerieConferencia", "descricao": "Série Conferência", "tabela": "TGWCSER"}, {"entidade": "VolumeConferidoColetor", "descricao": "Volume Conferido no Coletor", "tabela": "TGWVCC"}, {"entidade": "TipoCaixa", "descricao": "Tipos de Caixa", "tabela": "TGWTCX"}]}, {"modulo": "SEPARAÇÃO", "itens": [{"entidade": "AreaSeparacao", "descricao": "Area de Separacao", "tabela": "TGWARS"}, {"entidade": "LigacaoSeparacaoAgrupada", "descricao": "Ligação Separações Agrupadas", "tabela": "TGWSVAR"}, {"entidade": "NotaSeparacao", "descricao": "Nota por Separação", "tabela": "TGWSXN"}, {"entidade": "OndaSeparacao", "descricao": "Onda Separação", "tabela": "TGWOND"}, {"entidade": "QuantidadeCheckoutSeparacao", "descricao": "Quantidade de Checkouts na Separação", "tabela": "TGWQCS"}, {"entidade": "RegistroCorteSeparacao", "descricao": "Registro de Corte na Separação", "tabela": "TGWRCS"}, {"entidade": "Separacao", "descricao": "Separação WMS", "tabela": "TGWSEP"}, {"entidade": "Separador", "descricao": "Separadores", "tabela": "TGWUAS"}]}, {"modulo": "PROCESSOS", "itens": [{"entidade": "CaixaFlowrack", "descricao": "Caixa do processo Flowrack", "tabela": "TGWCCX"}, {"entidade": "ExplosaoLote", "descricao": "Explosão de Lote", "tabela": "TGWEXPL"}, {"entidade": "FaturamentoAutomaticoWMS", "descricao": "Faturamento automático WMS", "tabela": "TGWFATAUTO"}, {"entidade": "HistoricoCorteWMS", "descricao": "Historico de Corte", "tabela": "TGWHCT"}, {"entidade": "HistoricoDivergenciaWMS", "descricao": "HistoricoDivergenciaWMS", "tabela": "TGWHAD"}, {"entidade": "AgendaWMS", "descricao": "Agenda do WMS", "tabela": "TGWAGE"}, {"entidade": "ConfiguracaoJobEmpenho", "descricao": "Configuração do JOB de Empenho", "tabela": "TGWCONFEMPE"}, {"entidade": "DevolucaoWMS", "descricao": "Devolução WMS", "tabela": "TGWDEV"}, {"entidade": "Doca", "descricao": "Doca do WMS", "tabela": "TGWDCA"}, {"entidade": "EmpenhoProduto", "descricao": "Empenho de Produto", "tabela": "TGWEMPE"}, {"entidade": "EquipamentoWMS", "descricao": "Equipamento WMS", "tabela": "TGWEQP"}, {"entidade": "ViewGestaoUMAWms", "descricao": "Gestão de UMA", "tabela": "TGWEPL"}, {"entidade": "ImportacaoXMLS", "descricao": "Importação XML Série Medicamento", "tabela": "TGWXMLS"}, {"entidade": "ItemNotaWMS", "descricao": "Item de Nota no WMS", "tabela": "TGWITE"}, {"entidade": "LastroCamadaEmpresa", "descricao": "Lastro x Camada por Empresa", "tabela": "TGWLCE"}, {"entidade": "LiberacaoOcorrencia", "descricao": "Liberação de Ocorrência", "tabela": "TGWLBO"}, {"entidade": "LogConfirmacaoNotaWms", "descricao": "Log da Confirmação de Nota WMS", "tabela": "TGWLCN"}, {"entidade": "LogFaturamentoAutomaticoWMS", "descricao": "Log faturamento automático WMS", "tabela": "TGWLOGFATAUTO"}, {"entidade": "MotivoCorte", "descricao": "Motivo de Corte", "tabela": "TGWMCT"}, {"entidade": "MotivoDivergencia", "descricao": "Motivo de Divergência", "tabela": "TGWMDIV"}, {"entidade": "MotivoParadaWms", "descricao": "Motivo de Parada", "tabela": "TGWMPR"}, {"entidade": "MovimentoOcorrenciaWMS", "descricao": "Movimento de Ocorrência de WMS", "tabela": "TGWMOC"}, {"entidade": "OcorrenciaWMS", "descricao": "Ocorrência de WMS", "tabela": "TGWOCO"}, {"entidade": "PaleteNota", "descricao": "Pálete por Nota", "tabela": "TGWPXN"}, {"entidade": "QuantidadeRecontagem", "descricao": "Quantidade de Recontagem", "tabela": "TGWQTR"}, {"entidade": "RegistroPalete", "descricao": "Registro de Pálete", "tabela": "TGWRPL"}, {"entidade": "RegistroParadaEquipamento", "descricao": "Registro de Parada de Equipamentos do WMS", "tabela": "TGWRPR"}, {"entidade": "RegistroUMA", "descricao": "Registro de UMA", "tabela": "TGWRUMA"}, {"entidade": "TriagemCrossdocking", "descricao": "Triagem Crossdocking", "tabela": "TGWTRCD"}, {"entidade": "UsuarioToken", "descricao": "Usuário Token", "tabela": "TGWUTOK"}]}, {"modulo": "ESTOQUE", "itens": [{"entidade": "EstoqueNotaProduto", "descricao": "Estoque Nota Produto", "tabela": "TGWENP"}, {"entidade": "EstoqueEndereco", "descricao": "Estoque por endereço do WMS", "tabela": "TGWEST"}, {"entidade": "EstoquePalete", "descricao": "Estoque por Pálete", "tabela": "TGWEPL"}, {"entidade": "EstoqueValidadeWMS", "descricao": "Estoque Validade WMS", "tabela": "TGWESTVAL"}]}, {"modulo": "ENDEREÇOS", "itens": [{"entidade": "EnderecoAuxiliar", "descricao": "Endereço Auxiliar", "tabela": "TGWEAX"}, {"entidade": "EnderecoCrossDocking", "descricao": "Endereço CrossDocking", "tabela": "TGWEND"}, {"entidade": "ProdutoEndereco", "descricao": "Endereço do ProdutoWMS", "tabela": "TGWEXP"}, {"entidade": "EnderecoGrupoProduto", "descricao": "Endereço x Grupo Produto WMS", "tabela": "TGWEXG"}, {"entidade": "EnderecoLocal", "descricao": "Endereço x Local WMS", "tabela": "TGWEXL"}, {"entidade": "EnderecoAreaConf", "descricao": "Endereços", "tabela": "TGWEAC"}, {"entidade": "EnderecoAreaSep", "descricao": "Endereços", "tabela": "TGWEAS"}, {"entidade": "ExecutanteGrupoEnderecos", "descricao": "Executantes", "tabela": "TGWEGE"}, {"entidade": "FaixaEnderecosGrupo", "descricao": "Faixas de Endereços", "tabela": "TGWFEG"}, {"entidade": "GrupoEnderecos", "descricao": "Grupo de Endereços", "tabela": "TGWGEN"}, {"entidade": "EmpresaProdutoArea", "descricao": "Empresa x Produto x Área", "tabela": "TGWEPA"}]}];
+const DB_CONFIG = [{"etapa": "Etapa 1", "titulo": "Criação de Endereços", "contexto": "A criação da Arvore de armazenagem é o espelho do Centro de distribuição no qual vai ser implantado o WMS, nessa armavo deve refletir examente a realidade fisica do cliente, com a quantidade de RUAS, PREDIOS, NIVEIS, APARTAMENTOS, ou conforme nomecçatura dada na operação do cliente.", "itens": [{"item": "Deve ser Definida a Mascara para Endereçamento:", "importante": "Deve ser definina a mascara já prevendo uma evolução fisica do CD, pois futuramente pode necessitar de criar novos endereços, a mascara suporta 5 niveis, utilizando o cadastro massivo. O endereços \"Analiticos\" devem estar sempre no ultimo nivel.", "rotina": "Configurações » Avançado » Máscaras » Máscara para Endereço de Armaz.", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120513-M%C3%A1scara-para-Endere%C3%A7o-de-Armazenamento", "sub": null}, {"item": "Deve ser criado os Endereços de Armazenagem:", "importante": "Deve ser criado os endereços conforme estrutura fisica.", "rotina": "WMS » Cadastros » Cadastro Massivo de Endereços", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/4403127493143-Cadastro-Massivo-de-Endere%C3%A7os", "sub": null}]}, {"etapa": "Etapa 2", "titulo": "Conf. dos Tipos de Endereços", "contexto": "Após a criação da Arvore de Armazenagem, é necessario que seja revisto as configurações dos endereços criados como: Picking/Pumão, e o momento de criar/definir os endereços Especiais, Docas e Checkouts", "itens": [{"item": "PIKICNG:", "importante": "Endereços de picking devem ter vinculo de produto na aba/Produtos, e a Regra de Relacionamento do Produto, deve ser = Permitir(Cenario comum e mais utilizado)", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "PULMÃO:", "importante": "Endereços de Pulmão não deve ter a marcação de 'Picking' e na aba/Produtos não deve ter produtos vunculados e a regra de Relacionamento deve ser =Proibir", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "ENDEREÇOS ESPECIAIS :", "importante": "Endereços Especiais: AVARIA, PERDA, SOBRA, DIVERGENCIAS e GARANTIA - Esses endereços não devem ter a marcação 'Permitir Expedição', pois são produtos improprio para comercialização ou em estoque virtual, e devem ter a situação do endereço =BLOQUEADO. Obs. Cadastrar com os nomes de cada endereço p/facilitar posteriormente o vinculo nas preferencias da empresa", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "CHECKOUTS:", "importante": "Os endereços de Checkout deve estarem marcados como: Exclusivo p/Conferencia", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "CHECKOUT INDEFINIDO", "importante": "Este endeerço será utilizado para estocar os produtos separados, estocados de forma 'virtual', até que os produtos sejam enviados para o checkout fisico, este endereço não deve 'Permitir Expedição' e não deve ser marcado como 'Exclusivo p/conferencia).", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "DOCA(ENT/SAI):", "importante": "Os endereços de DOCA não podem estar com a marcação 'Permite Expedição', pois não se trata de endereços de armazenamento dentro do armazem, utilziados para movimentação dos Produtos. Este endereço devem ser vinculado ao Cadastro de Docas.", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "CADASTRO DE DOCAS", "importante": "Neste cadastro deve ser vinculado o Endereço cadastrado anteriormente(Endereços de Armazenagem)", "rotina": "WMS » Cadastros » Docas", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360044612974-Docas", "sub": null}, {"item": "ENDEREÇOS INDEFINIDOS P/MOVIMENTAÇÃO", "importante": "Deve ser cadastrado os endereços utilizados na Movimentação-Pro Ativa e na geração de tarefas de armazenagem, o endereço indefinido p/ armazenagem, utilizado quando os algoritmos de armazenagem não encontra endereços disponiveis. Esses endereços não devem 'Permitir Expedição'", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento#preenchimentosiniciais", "sub": null}, {"item": "Endereço Indefinido para Movimentação", "importante": "O endereço criado vai ser vinculado nas Preferencias da Empresa", "rotina": "", "help": "", "sub": null}, {"item": "Endereço indefinido para Armazenagem", "importante": "O endereço criado vai ser vinculado nas Preferencias da Empresa", "rotina": "", "help": "", "sub": null}]}, {"etapa": "Etapa 3", "titulo": "Config. Preferências da Empresa", "contexto": "", "itens": [{"item": "Controlado pelo WMS?", "importante": "Deve marcar este flag para a empresa que vai efetuar o controle de estoque com WMS", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "CONFIG.GERAIS"}, {"item": "Empresa para estoque no WMS:", "importante": "Empresa p/utilizar o estoque do WMS", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "CONFIG.GERAIS"}, {"item": "Endereço p/ armazenagem/separação:", "importante": "Endereço pai(primeiro da arvore) da arvore de armazenagem deve ser informado neste campo", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "CONFIG.GERAIS"}, {"item": "Cód. End. Avaria:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "ENDEREÇOS ESPECIAIS"}, {"item": "Cód. End. Divergência:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "ENDEREÇOS ESPECIAIS"}, {"item": "Cód. End. Perda:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "ENDEREÇOS ESPECIAIS"}, {"item": "Cód. End. Sobra:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "ENDEREÇOS ESPECIAIS"}, {"item": "Endereço especial de garantia:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "", "sub": "ENDEREÇOS ESPECIAIS"}, {"item": "Endereço de checkout indefinido:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "EXPEDIÇÃO DE MERCADORIA"}, {"item": "Endereço para retorno de expedição:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "EXPEDIÇÃO DE MERCADORIA"}, {"item": "Cód. End. Armazenamento Indefinido:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "MOVIMENTAÇÃO E ARMAZENAGEM"}, {"item": "Endereço indefinido para movimentação:", "importante": "Deve ser vinculado o Endereço cadastrado no Cadastro de Endereços de Armazenagem", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "MOVIMENTAÇÃO E ARMAZENAGEM"}, {"item": "Permite fragmentar Estoque=S", "importante": "Deve estar marcada para que o WMS gere tarefas fragmentando os paletes.", "rotina": "Comercial » Preferências » Empresa", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "MOVIMENTAÇÃO E ARMAZENAGEM"}]}, {"etapa": "Etapa 4", "titulo": "Config. Usuário/Equipamento", "contexto": "", "itens": [{"item": "CADASTRO DE EQUIPAMENTE", "importante": "Neste cadastro vai ser registrados os equipamentos utilizados no CD, Exemplo: Paleteira, Carrinho, empilhadeira e etc...", "rotina": "WMS » Cadastros » Cadastro de Equipamentos", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360044613014-Cadastro-de-Equipamentos", "sub": null}, {"item": "CADSTRO DE TIPO DE EQUIPAMENTO", "importante": "Neste cadasatro será apresentado os equipamento cadastradados anteriormente, pore agora será definido o limite de cada equipamento(peso, nivel que pode operar)", "rotina": "Rotina:WMS » Cadastros » Tipos de Equipamento", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360044612954-Tipos-de-Equipamento", "sub": null}, {"item": "CONFIGURAÇÃO POR USUARIO/OPERADOR", "importante": "Neste cadasatro será definido quais os tipos de tarefas será executa por Operador.", "rotina": "WMS » Rotinas » Configurações por Usuário", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360044595354-Configura%C3%A7%C3%B5es-por-Usu%C3%A1rio", "sub": null}]}, {"etapa": "Etapa 5", "titulo": "Configurações da Regra de Armazenagem", "contexto": "Para gerar entradas no WMS, o sistema deve estar com seus produtos configurados com as informações de medidas(cadastro do Produto, aba/Medidas e estoque), e o mesmo tem que estar marcado para controlar WMS. O produto tendo as configurações as medidas serão usadas no momento da geração de tarefas de armazenagem, bem como as medidas configuradas nos endereços de armazenagem. Para geração das tarefas, o sistema utiliza de algoritmos, que são configurados na Rotina abaixo:", "itens": [{"item": "Configurações de Armazenagem", "importante": "Nesta tela vai possuir tres algoritmos, sendo: Picking, Endereços Vazios e Completar endereços. Dentro de cada algortmo existem mais regras que vão fazer com que a armazenagem seja feita de maneira mais eficaz, aproveitando os melhores endereços.", "rotina": "WMS » Rotinas » Configuração de Armazenagem", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360044613234-Configura%C3%A7%C3%A3o-de-Armazenagem", "sub": null}, {"item": "WMSREGRARMDEV -Regra de armazenagem para devoluções de venda", "importante": "Para devolução de Venda existe uma regra especifica, pois se trata de produtos já movimentados.", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045120313-Endere%C3%A7o-de-Armazenamento", "sub": null}]}, {"etapa": "Etapa 6", "titulo": "Conf. de Expedição", "contexto": "", "itens": [{"item": "Utiliza doca automaticamente separações balcão:", "importante": "No envio de uma venda balcão o sistema vai selecionar uma Doca Balcão de forma automatica.", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Considerar armazenagens pendentes no envio para expedição:", "importante": "No envio da Ordem de Carga será consideradas o estoquem em doca de entrada que tenha tarefas de armazenagem geradas", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Envio ped. balcão considera entradas pendentes:", "importante": "No envio do Pedido balcão será consideradas o estoquem em doca de entrada que tenha tarefas de armazenagem geradas", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Tratamento p/falta de estoque no envio da OC:", "importante": "Será feita a tratativa de falta de estoque no WMS", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Tipo de corte na separação:", "importante": "Será definida a politica de corte(falta de estoque no WMS)", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Gerar reabastecimento corretivo:", "importante": "Será gerado no envio da Ordem de Carga em casos que o Pikcing não atender a demanda da Ordem de Carga e o sistema encontrar estoque nos endereços de pulmão", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "UTILIZADAS NO ENVIO DA OC"}, {"item": "Modelo padrão de Etiqueta de Volume:", "importante": "Deve ser informado o modelo cadastrado na tela: Comercial » Relatórios » Modelos de Etiquetas(Na tela Etiquetas de Volumes, possui um modelo para baixar)", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "IMPRESSÃO DE ETIQUETAS"}, {"item": "Impressora padrão da Etiqueta de Volume:", "importante": "Deve ser informada a impressora para impressão das etiquetas geradas na conferencia por Pedido/Por produto", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "IMPRESSÃO DE ETIQUETAS"}, {"item": "Impressão de etiqueta de volumes:", "importante": "Deve ser informado o momento em que será gerada as etiquetas das areas por Produto", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "IMPRESSÃO DE ETIQUETAS"}, {"item": "Imprimir etiquetas de volume na conferência:", "importante": "Deve ser marcada a opção para informar a quantidade volumes formados na Conferencia por pedido", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "IMPRESSÃO DE ETIQUETAS"}, {"item": "Imprime etiquetas de separação por OC:", "importante": "Deve ser marcada para geração das etiquetas das areas de separação por Produto.", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": "IMPRESSÃO DE ETIQUETAS"}]}, {"etapa": "Etapa 7", "titulo": "Config. Modelos Nf/Série e TOPs", "contexto": "", "itens": [{"item": "Nota modelo sobra estoque WMS (Entrada):", "importante": "Este modelo será utilizado para gerar notas de ajustes, após o inventario do WMS", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}, {"item": "Nota modelo perda estoque WMS (Saída):", "importante": "Este modelo será utilizado para gerar notas de ajustes, após o inventario do WMS", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}, {"item": "Local para ajuste de estoque:", "importante": "Será utilizado no inventario para ajustar o LOCAL no estoque Fiscal no momento de gerar as notas de ajuste", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}, {"item": "Modelo Retor. de Est. Gerencial WMS(Venda):", "importante": "Será utilizado para notas fiscais denegadas/cancelas que tiveram os pedidos concluidos no WMS", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}, {"item": "Série p/ devolução de mercadorias:", "importante": "Será utilizada para devoluções de compra geradas por divergencias no Recebimento", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}, {"item": "TOP p/ devolução de mercadorias:", "importante": "Será utilizada para devoluções de compra geradas por divergencias no Recebimento", "rotina": "Configurações » Avançado » Preferências", "help": "https://ajuda.sankhya.com.br/hc/pt-br/articles/360045114893-Prefer%C3%AAncias-da-Empresa#abawms", "sub": null}]}, {"etapa": "Pontos de Atenção", "titulo": "Boas práticas / checklist final", "contexto": "", "itens": [], "pontos": ["Endereços Especiais(AVARIA, SOBRA, DIVERGENCIA, PERDA) não deve ter a opção: Permite Expedição(Cadastro: Endereços de Armazenagem)", "Endereços de DOCA - Não deve te a opção: Permite Expedição(Cadastro: Endereços de Armazenagem)", "Endereços de Mov. indefinido(Idenfinido para movimentação e Indefinido para Armazenagem não deve permitir Expedição.", "Endereços de Checkout - Não deve te a opção: Permite Expedição(Cadastro: Endereços de Armazenagem)", "Endereço de Checkout indefinido - Não pode estar marcado como \"Exclusivo p/conferencia\" e \"Permite Expedição\".", "Endereços de Picking - Devem ter o estoque minimo e maximo configurados, para que o WMS tenha ponto de partida da quantidade a ser Reabastecida."]}];
+const DB_REL = [{"de": "TGWTAR", "para": "TGWITT", "campo": "NUTAREFA", "desc": "Uma Tarefa (TGWTAR) possui vários Itens de Tarefa (TGWITT). TGWITT não tem CODEMP/DHINI/DHFIM diretos — data e empresa vêm da tarefa pai."}, {"de": "TGWSEP", "para": "TGWTAR", "campo": "NUTAREFA", "desc": "Separação (TGWSEP) não tem CODEMP nem datas próprias; filtro de período sempre passa por TGWTAR (join por NUTAREFA)."}, {"de": "TGWITT", "para": "TGFITE", "campo": "NUNOTA/SEQUENCIA", "desc": "Item de Tarefa se relaciona ao item de nota fiscal; QTDWMS deve ser lido de TGFITE.QTDWMS diretamente, não derivado por cálculo."}, {"de": "TGFTOP", "para": "TGFLOC/TGFPRO/TGFEMP", "campo": "cascata UTILIZAWMS", "desc": "Cascata de controle WMS: TOP.UTILIZAWMS IN ('A','M') AND TIPATUALWMS='B' → LOC.UTILIZAWMS='S' → PRO.UTILIZAWMS='S' → EMP.UTILIZAWMS='S'. Todos os 4 níveis precisam estar 'ligados' para o produto/operação ser controlado pelo WMS."}, {"de": "TGFTOP", "para": "TGFCAB", "campo": "DHALTER = DHTIPOPER", "desc": "TGFTOP é histórico (guarda snapshots por data de alteração); é preciso casar TOP.DHALTER com CAB.DHTIPOPER para pegar a TOP vigente no momento da operação."}, {"de": "TGFEMP", "para": "Endereços especiais", "campo": "colunas dedicadas", "desc": "TGFEMP guarda os códigos dos endereços especiais (Avaria, Perda, Sobra, Divergência, Garantia) vinculados nas Preferências da Empresa — mesma lógica do TGWEST via WMSCODENDGAR para garantia."}, {"de": "TGWEST", "para": "TGWEND", "campo": "CODEND", "desc": "Estoque por Endereço (TGWEST) referencia o cadastro de Endereço de Armazenagem (TGWEND) — base de todo o saldo físico por posição."}, {"de": "TGWEND", "para": "TGWARA", "campo": "CODAREA", "desc": "Endereço de Armazenagem pertence a uma Área de Armazenagem (TGWARA), que por sua vez tem Regras de Armazenagem (TGWRFA) e Relacionamento (TGWRARM) associados."}, {"de": "TGWDCA", "para": "TGWEND", "campo": "CODEND", "desc": "Doca (TGWDCA) é vinculada a um Endereço de Armazenagem previamente cadastrado (não pode ter 'Permite Expedição')."}, {"de": "TGWSEP", "para": "TGWSXN", "campo": "NUTAREFA/NUNOTA", "desc": "Nota por Separação (TGWSXN) liga a Separação à(s) Nota(s) Fiscal(is) que ela está atendendo — importante em separação agrupada/ondas."}, {"de": "TGWOND", "para": "TGWSEP", "campo": "NUONDA", "desc": "Onda de Separação (TGWOND) agrupa várias Separações — base do processo de ondas."}, {"de": "TGWREC", "para": "TGWITER/TGWRXN", "campo": "NURECEB", "desc": "Recebimento WMS (TGWREC) tem Itens (TGWITER) e Notas vinculadas (TGWRXN) — base da conferência de entrada."}, {"de": "TGWCON", "para": "TGWCOI", "campo": "NUCONFERENCIA", "desc": "Conferência Cega (TGWCON) tem Itens da conferência (TGWCOI); TGWCOIVAL trata itens com controle de validade separadamente."}, {"de": "TGWEQP", "para": "TGWTTE", "campo": "CODEQP/CODTAREFA", "desc": "Equipamento (TGWEQP) x Tipo de Tarefa (TGWTTE) define aptidão — qual equipamento pode executar qual tipo de tarefa (regra da Etapa 4 do guia)."}, {"de": "TGWARM", "para": "TGWRFA/TGWRARM", "campo": "CODAREA", "desc": "Armazenagem WMS usa as Regras de Armazenagem e o Relacionamento de Armazenagem para decidir onde alocar o produto (algoritmos: Picking, Endereços Vazios, Completar Endereços — Etapa 5)."}];
+
+</script>
+<script>
+const PROCESS_CATEGORIES = [
+  {id:"recebimento", label:"Recebimento",              cor:"#3ee0d6", ordem:1},
+  {id:"armazenagem", label:"Armazenagem",              cor:"#f5b301", ordem:2},
+  {id:"movimentacao",label:"Movimentação entre Endereços", cor:"#8b7cf6", ordem:3},
+  {id:"picking",     label:"Picking",                  cor:"#5bd97a", ordem:4},
+  {id:"packing",     label:"Packing",                  cor:"#f57b5b", ordem:5},
+  {id:"expedicao",   label:"Expedição",                cor:"#4fa8f0", ordem:6},
+  {id:"geral",       label:"Geral / Configuração",      cor:"#93a1c4", ordem:7},
+];
+
+const TABELA_CATEGORIA = {"TGWITER": "recebimento", "TGWRXN": "recebimento", "TGWREC": "recebimento", "TGWVAE": "armazenagem", "TGWARA": "armazenagem", "TGWARM": "armazenagem", "TGWARE": "armazenagem", "TGWEXU": "armazenagem", "TGWEND": "armazenagem", "TGWAXFE": "armazenagem", "TGWAXG": "armazenagem", "TGWAXPAR": "armazenagem", "TGWAXP": "armazenagem", "TGWRFA": "armazenagem", "TGWRARM": "armazenagem", "TGWEAX": "armazenagem", "TGWEXP": "armazenagem", "TGWEXG": "armazenagem", "TGWEXL": "armazenagem", "TGWEGE": "armazenagem", "TGWFEG": "armazenagem", "TGWGEN": "armazenagem", "TGWEPA": "armazenagem", "TGWLCE": "armazenagem", "TGWTRA": "movimentacao", "TGWRAG": "movimentacao", "TGWREP": "movimentacao", "TGWTRAN": "movimentacao", "TGWUXT": "picking", "TGWITT": "picking", "TGWPTR": "picking", "TGWTEC": "picking", "TGWTDP": "picking", "TGWTAR": "picking", "TGWTTE": "picking", "TGWTTR": "picking", "TGWUSU": "picking", "TGWARS": "picking", "TGWSVAR": "picking", "TGWSXN": "picking", "TGWOND": "picking", "TGWQCS": "picking", "TGWRCS": "picking", "TGWSEP": "picking", "TGWUAS": "picking", "TGWHCT": "picking", "TGWEMPE": "picking", "TGWIES": "packing", "TGWREV": "packing", "TGWIVL": "packing", "TGWPVOL": "packing", "TGWARC": "packing", "TGWCON": "packing", "TGWNCP": "packing", "TGWUAC": "packing", "TGWICC": "packing", "TGWCOI": "packing", "TGWCOIVAL": "packing", "TGWRCON": "packing", "TGWCSER": "packing", "TGWVCC": "packing", "TGWTCX": "packing", "TGWCCX": "packing", "TGWDCA": "expedicao", "TGWFATAUTO": "expedicao", "TGWLOGFATAUTO": "expedicao", "TGWTRCD": "expedicao", "TGWPXN": "expedicao", "TGWRPL": "expedicao", "TGWRUMA": "expedicao", "TGWDEV": "expedicao", "TGWAJE": "geral", "TGWIVR": "geral", "TGWCTE": "geral", "TGWIVT": "geral", "TGWIVRSER": "geral", "TGWHAJ": "geral", "TGWENP": "geral", "TGWEST": "geral", "TGWEPL": "geral", "TGWESTVAL": "geral", "TGWAGE": "geral", "TGWCONFEMPE": "geral", "TGWEQP": "geral", "TGWXMLS": "geral", "TGWITE": "geral", "TGWLBO": "geral", "TGWLCN": "geral", "TGWMCT": "geral", "TGWMDIV": "geral", "TGWMPR": "geral", "TGWMOC": "geral", "TGWOCO": "geral", "TGWQTR": "geral", "TGWRPR": "geral", "TGWUTOK": "geral", "TGWEXPL": "geral", "TGWHAD": "geral"};
+const CATEGORIA_KEYWORDS = {"recebimento": ["recebimento", "receber", "doca de entrada", "nota de entrada", "conferência de entrada", "conferencia de entrada", "xml", "danfe", "nota fiscal de entrada", "fornecedor", "compra", "chegada de mercadoria", "descarga", "agendamento de recebimento", "triagem", "cross docking", "crossdocking", "devolução de compra", "devolucao de compra"], "armazenagem": ["armazenagem", "armazenar", "endereço", "endereco", "endereçamento", "enderecamento", "rua", "prédio", "predio", "nível", "nivel", "apartamento", "picking", "pulmão", "pulmao", "porta-palete", "porta palete", "blocado", "regra de armazenagem", "área de armazenagem", "area de armazenagem", "mascara de endereço", "máscara de endereço", "cadastro massivo", "alocação", "alocacao", "endereço especial", "garantia", "avaria", "perda", "sobra", "divergência", "divergencia"], "movimentacao": ["transferência", "transferencia", "movimentação entre endereços", "movimentacao entre enderecos", "reabastecimento", "realocação", "realocacao", "troca de endereço", "troca de endereco", "movimentação pró ativa", "movimentacao pro ativa", "transito", "trânsito", "completar endereço", "completar endereco", "rebalanceamento"], "picking": ["picking", "separação", "separacao", "onda", "separador", "tarefa", "corte", "corte de separação", "corte de separacao", "coletor", "rf", "aptidão", "aptidao", "equipamento", "paleteira", "empilhadeira", "roteirização", "roteirizacao", "wave", "separação agrupada", "separacao agrupada", "curva pqr", "empenho"], "packing": ["packing", "conferência", "conferencia", "conferente", "etiqueta", "volume", "embalagem", "caixa", "checkout", "validação", "validade", "série", "serie", "conferência cega", "conferencia cega", "romaneio de volume", "formação de volume", "formacao de volume", "peso do volume"], "expedicao": ["expedição", "expedicao", "doca de saída", "doca de saida", "ordem de carga", "romaneio", "transportadora", "carregamento", "envio", "nota fiscal de saída", "nota fiscal de saida", "faturamento automático", "faturamento automatico", "balcão", "balcao", "tratamento de falta de estoque", "corte na expedição", "corte na expedicao", "devolução de venda", "devolucao de venda"], "geral": ["estoque", "inventário", "inventario", "ajuste de estoque", "preferências da empresa", "preferencias da empresa", "configuração", "configuracao", "utilizawms", "top", "cadastro de equipamento", "usuário", "usuario", "token", "ocorrência", "ocorrencia", "motivo de parada"]};
+
+</script>
+<script>
+const BOAS_PRATICAS = [{"trilha": "Avaliação de Necessidades e Objetivos", "itens": [{"titulo": "Avaliação de Necessidades e Objetivos:", "texto": "Antes de implementar um WMS, é crucial entender completamente as necessidades específicas do negócio e os objetivos que se espera alcançar com o sistema. Isso inclui avaliar os processos existentes, identificar áreas de melhoria e definir metas claras para a implementação do WMS."}, {"titulo": "Engajamento das Partes Interessadas:", "texto": "Envolver todas as partes interessadas, incluindo gestores de operações, funcionários do armazém, TI, fornecedores e clientes, desde o início do processo. Isso ajuda a garantir que as necessidades de todas as partes sejam consideradas e que haja apoio e colaboração ao longo da implementação."}, {"titulo": "Análise de Processos Atuais:", "texto": "Realize uma análise detalhada dos processos atuais do armazém para identificar áreas de ineficiência, gargalos e oportunidades de melhoria. Isso ajudará a determinar como o WMS pode ser configurado para melhor atender às necessidades específicas do negócio."}, {"titulo": "Definição de Requisitos Funcionais e Técnicos:", "texto": "Trabalhe com as partes interessadas para definir claramente os requisitos funcionais e técnicos do WMS. Isso inclui funcionalidades específicas necessárias para atender às necessidades do negócio, integrações com outros sistemas e requisitos de hardware e software."}, {"titulo": "Seleção do Fornecedor e do Sistema:", "texto": "Realize um processo de seleção criterioso para escolher o fornecedor e o sistema de WMS que melhor atendam aos requisitos do negócio. Isso pode envolver a avaliação de múltiplos fornecedores, demonstrações de produtos e referências de clientes."}, {"titulo": "Planejamento de Implantação:", "texto": "Desenvolva um plano detalhado de implantação que inclua cronogramas, responsabilidades, recursos necessários e marcos de progresso. Certifique-se de que o plano leve em consideração a capacidade de treinamento e suporte para garantir uma transição suave."}, {"titulo": "Testes e Validação:", "texto": "Realize testes extensivos do sistema de WMS em um ambiente controlado antes da implementação completa. Isso inclui testes de funcionalidade, integração com outros sistemas, desempenho e segurança. Certifique-se de validar os resultados dos testes com as partes interessadas."}, {"titulo": "Treinamento e Educação:", "texto": "Forneça treinamento abrangente para os usuários finais do sistema de WMS para garantir que eles entendam completamente como usar o sistema de forma eficaz e eficiente. Isso pode incluir treinamento presencial, treinamento online e materiais de referência."}, {"titulo": "Suporte Pós-Implementação:", "texto": "Estabeleça um plano de suporte pós-implementação para fornecer assistência contínua aos usuários finais e resolver quaisquer problemas que surjam após a implementação. Isso pode incluir suporte técnico, atualizações de software e acompanhamento regular com as partes interessadas."}]}, {"trilha": "Mapeamento do Processo Atual:", "itens": [{"titulo": "Comece mapeando detalhadamente o processo atual de gestão de armazém, desde a recepção de mercadorias até o envio de pedidos. Isso pode incluir todas as etapas, atividades, recursos e sistemas envolvidos no processo.", "texto": "Identificação de Desafios e Gargalos:"}, {"titulo": "Analise o processo mapeado para identificar quaisquer desafios, ineficiências ou gargalos que estão afetando a produtividade, precisão ou custo operacional. Isso pode incluir atrasos na recepção de mercadorias, falta de visibilidade do estoque, erros de picking, entre outros.", "texto": "Coleta de Dados e Métricas:"}, {"titulo": "Colete dados quantitativos e qualitativos sobre o desempenho do processo, como tempo médio de processamento de pedidos, taxa de erro de picking, utilização de espaço de armazenamento, entre outros. Essas métricas ajudarão a quantificar o impacto dos desafios identificados.", "texto": "Análise de Fluxo de Trabalho:"}, {"titulo": "Analise o fluxo de trabalho atual para entender como as tarefas são realizadas, quem está envolvido em cada etapa e como as informações e mercadorias fluem pelo sistema. Isso ajudará a identificar possíveis pontos de melhoria no fluxo de trabalho.", "texto": "Entrevistas e Feedback dos Funcionários:"}, {"titulo": "Realize entrevistas com os funcionários que estão envolvidos no processo para obter insights sobre suas experiências, desafios e sugestões de melhoria. O feedback dos funcionários pode fornecer informações valiosas sobre questões que podem não ser evidentes durante a análise dos dados.", "texto": "Análise de Tecnologia e Sistemas Existentes:"}, {"titulo": "Avalie os sistemas de tecnologia existentes utilizados no armazém, incluindo qualquer software de gestão de estoque, sistemas de automação e equipamentos de hardware. Identifique oportunidades de integração ou substituição de sistemas para melhorar a eficiência e a precisão das operações.", "texto": "Benchmarking e Melhores Práticas:"}, {"titulo": "Pesquise e compare as práticas de gestão de armazém e os padrões da indústria para identificar melhores práticas e oportunidades de melhoria. Isso pode incluir benchmarking com empresas similares ou a consulta de estudos e pesquisas relevantes.", "texto": "Priorização de Áreas de Melhoria:"}]}, {"trilha": "Revisão dos Requisitos do WMS Cotado:", "itens": [{"titulo": "Comece revisando detalhadamente os requisitos e funcionalidades do WMS que foram cotados e propostos pelo fornecedor. Certifique-se de entender completamente as capacidades do sistema e como ele se alinha com as necessidades e objetivos específicos do negócio.", "texto": "Mapeamento do Processo Atual:"}, {"titulo": "Mapeie os processos atuais de gestão de armazém para entender como as operações são realizadas antes da implementação do WMS. Isso ajudará a identificar onde o sistema pode ser integrado e onde os processos existentes podem precisar ser ajustados.", "texto": "Análise de Lacunas:"}, {"titulo": "Compare os requisitos e funcionalidades do WMS com os processos atuais para identificar quaisquer lacunas ou discrepâncias. Isso pode incluir funcionalidades ausentes no sistema cotado ou processos existentes que não são suportados pelo WMS.", "texto": "Avaliação da Personalização Necessária:"}, {"titulo": "Determine se o WMS cotado atende aos requisitos do negócio sem a necessidade de personalização significativa. Se forem necessárias personalizações, avalie o impacto delas no custo, tempo de implementação e manutenção a longo prazo do sistema.", "texto": "Avaliação da Integração com Sistemas Existentes:"}, {"titulo": "Avalie como o WMS se integrará com os sistemas de tecnologia existentes utilizados no armazém, como sistemas de gestão empresarial (ERP), sistemas de automação e equipamentos de hardware. Certifique-se de que a integração seja viável e eficiente.", "texto": "Testes de Funcionalidade:"}, {"titulo": "Realize testes de funcionalidade do WMS cotado para garantir que ele atenda aos requisitos do negócio e funcione conforme o esperado. Isso pode incluir testes de processos específicos, simulações de cenários reais e verificação da precisão dos dados.", "texto": "Feedback dos Usuários:"}, {"titulo": "Solicite feedback dos usuários finais e das partes interessadas sobre a aderência do processo ao WMS cotado. Isso pode incluir a avaliação da usabilidade do sistema, a eficácia das funcionalidades e quaisquer preocupações ou sugestões para melhorias.", "texto": "Ajustes e Otimizações:"}]}];
+const CHECKLIST_IMPLANTACAO = [{"categoria": "CADASTRO DO PRODUTO", "macro": "ERP", "subsecoes": [{"titulo": null, "itens": [{"item": "1.1 - Codigo de Barras:", "rotina": null, "vinculo": null, "campo": null, "obs": "Não"}, {"item": "- Referencia", "rotina": "Configurações » Cadastros » Produtos » Produtos » Aba/Geral", "vinculo": null, "campo": null, "obs": null}, {"item": "- Unidade Alternativa", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/Unidade Alternativa", "vinculo": null, "campo": null, "obs": null}, {"item": "- Aba/Codigo de Barras(caso tenha a necessidade).", "rotina": "Configurações » Cadastros » Produtos » Produtos » Codigo de Barras", "vinculo": null, "campo": null, "obs": null}, {"item": "Verificar se existe Codigo de Barras duplicados", "rotina": "WMS » Rotinas » Validação de Configurações do WMS", "vinculo": null, "campo": null, "obs": null}]}, {"titulo": "1.2 - Medidas do produto:", "itens": [{"item": "- Flag - Controlado pelo WMS", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}, {"item": "- Peso Bruto", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}, {"item": "- Peso Liquido", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}, {"item": "- Altura", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}, {"item": "- Largura", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}, {"item": "- Espessura/Profundidade", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/medidas e Estoque", "vinculo": null, "campo": null, "obs": null}]}, {"titulo": "1.3 - Aba/WMS", "itens": [{"item": "- Flag - Recuperavel de Avaria", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "- Usar controle adicional no WMS(Caso seja controlado no ERP)", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "- Fragmenta lote no envio para separação(somente se tiver lote)", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "- ShefLife e ShelfLife Minimo(Caso seja controlado por FEFO)", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "- Dias para Expedição(em casos de Shelflife)", "rotina": "Configurações » Cadastros » Produtos » Produtos » aba/WMS", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "CADASTRO DE LOCAIS", "macro": "ERP", "subsecoes": [{"titulo": "OPÇÃO:", "itens": [{"item": "1.1 - Flag - Controlado pelo WMS", "rotina": "Comercial » Arquivo » Cadastros » Locais", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "PREFERENCIAS DA EMPRESA", "macro": "ERP", "subsecoes": [{"titulo": "OPÇÃO:", "itens": [{"item": "1.1 - Flag - Controlado pelo WMS", "rotina": "Comercial » Preferências » Empresa » Aba/WMS", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "TIPO DE OPERAÇÃO -TOP( conforme a necessidade).", "macro": "ERP", "subsecoes": [{"titulo": null, "itens": [{"item": "1.1 - Compra", "rotina": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP/Aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "1.2 - Transferencia", "rotina": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP/Aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "1.3 - Requisição", "rotina": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP/Aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "1.4 - Pedido de Venda", "rotina": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP/Aba/WMS", "vinculo": null, "campo": null, "obs": null}, {"item": "1.5 - Dev. de Venda", "rotina": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP/Aba/WMS", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "WMS - ESTRUTURA DE INFRA/EQUIPAMENTO", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Instalação e validação bancadas checkouts", "rotina": "Fisíco", "vinculo": null, "campo": null, "obs": null}, {"item": "Instalação e validação antenas dos coletores", "rotina": "Instalação", "vinculo": "Sim", "campo": null, "obs": null}, {"item": "Instalação e validação impressoras zebras", "rotina": "Instalação", "vinculo": null, "campo": null, "obs": null}, {"item": "Instalação e validação emulador (Android versão>=9)", "rotina": "Instalação", "vinculo": null, "campo": null, "obs": null}, {"item": "Etiquetar os endereços (porta pallet) de pulmão, picking e flowrack, docas e checkouts (carrinhos)", "rotina": "Instalação", "vinculo": null, "campo": null, "obs": null}, {"item": "Existe carrinhos suficientes para realização da separação?", "rotina": "Fisíco", "vinculo": null, "campo": null, "obs": null}, {"item": "Existe hidráulicos suficientes para realização da separação?", "rotina": "Fisíco", "vinculo": null, "campo": null, "obs": null}, {"item": "SPS (Sankhya Print Service)", "rotina": "Instalação", "vinculo": null, "campo": null, "obs": null}, {"item": "Paletização Padronizada", "rotina": "Fisíco", "vinculo": null, "campo": null, "obs": null}, {"item": "Ruas sem impedimentos", "rotina": "Fisíco", "vinculo": null, "campo": null, "obs": null}, {"item": "Servidor dedicado p/WMS", "rotina": "Instalação", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "WMS -ENDEREÇOS DE ARMAZENAGEM", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "1.1 - Cadastrar a Mascara para Endereçamento:", "rotina": "Configurações » Avançado » Máscaras » Máscara para Endereço de Armazenamento", "vinculo": null, "campo": null, "obs": "Através dessa tela você efetua a configuração/criação de máscaras para Endereços de Armazenamento. A máscara aqui cadastrada será utilizada na tela Endereço de Armazenamento."}, {"item": "1.2 - Criar a arvore de Armazenagem do endereços:", "rotina": "WMS » Cadastros » Cadastro Massivo de Endereços", "vinculo": null, "campo": null, "obs": "Nesta rotina cadastre/configure os Endereços, para que estes aceitem ou não, o armazenamento de um Produto ou Grupo de Produtos.  Tmabém será Definida as medidas dos endereços e o tipo do endereço."}, {"item": "1.3 - Configurar  Endereço p/ armazenagem/separação", "rotina": "Comercial » Preferências » Empresa » aba/WMS", "vinculo": null, "campo": null, "obs": "Aponte através do campo \"Endereço p/ armazenagem/separação\" o \"Endereço Pai\" para o qual será possível fazer movimentação para empresa."}, {"item": "1.4 - Configurar Empresa p/Estoque no WMS", "rotina": "Comercial » Preferências » Empresa » aba/WMS", "vinculo": null, "campo": null, "obs": "Informe no campo \"Empresa para estoque no WMS\", a Empresa que deverá compor o estoque para o aplicativo WMS. Este campo possui a finalidade de agrupar em um único armazém o estoque de várias empresas."}]}, {"titulo": ">> Geração das Etiquetas para identificação dos endereços:", "itens": [{"item": "2.1 - Criar o modelo JRXL da Etiqueta Porta Palete(disponivel no Place)", "rotina": "Configurações » Avançado » Relatórios Formatados", "vinculo": null, "campo": null, "obs": "O iReport é a ferramenta utilizada no sistema para a impressão de relatórios personalizados e rápidos. Ou seja, são os componentes de impressão e de geração de PDF desta ferramenta, que são utilizados na impressão dos relatórios.\n\nAlém disso, é uma ferramenta gratuita, escrita em Java e que não pode ser acessada pela WEB, ou seja, é uma ferramenta \"Desktop\" que deve ser instalada no computador para utilização; ela possui muitos recursos de desenhos de relatórios e de gráficos.\n\nA atualização desta ferramenta poderá ser feita através do site JasperForge.org que é uma fonte de informação a respeito do iReport.\n\nNota: existem recursos avançados que poderão ser utilizados, que estão disponíveis nos tutoriais do iReport, disponibilizados no site JasperForge.org. Pelos tutoriais, pode-se aprender como utilizar estes recursos avançados para elaborar um relatório e importá-lo para o Sankhya-Om.\n\nAtenção FINAL.png O plugin para 'iReport' da Sankhya, permite que o usuário crie, visualize e edite relatórios, sem a necessidade de acessar o Sankhya-Om no navegador. Clique em iReport para saber mais.\n\nA tela de Relatórios Formatados permite a criação e visualização de informações a partir de todas as movimentações da empresa, podendo estas serem personalizadas de acordo com a necessidade do usuário."}, {"item": "2.2 - Realizar a Impressão das Etiquetas", "rotina": "Configurações » Avançado » Relatórios Formatados(CTRL+P)", "vinculo": null, "campo": null, "obs": "Não há"}, {"item": "2.3 - Colar as etiquetas nos endereços", "rotina": "Processo fisico", "vinculo": null, "campo": null, "obs": "Não há"}]}, {"titulo": ">> Configurar os Tipos de Endereço:", "itens": [{"item": "1 -  Endereços de Picking(Picking Fixo).", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "WMS » Cadastros » Área de Separação", "campo": "Aba/Endereços", "obs": "Realizando a marcação \"Picking\" será informado ao sistema que este endereço é um Picking, ou seja, lugar em que os produtos são armazenados fracionados e separados."}, {"item": "Picking Rotativo.", "rotina": "Clique para ver as Configurações.", "vinculo": null, "campo": null, "obs": null}, {"item": "2 - Endereços de Pulmão", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": null, "campo": null, "obs": "Serão considerados como endereços de \"Pulmão\", aqueles que estão marcadois como \"Permite Expedição\" e que não são \"Picking\", e com exceção de DOCAS, checkouts, End. Especiais."}, {"item": "3 - Ordem dos Endereços.", "rotina": "WMS » Cadastros » Endereço de Armazenamento » Aba/Geral » Campo » Ordem", "vinculo": null, "campo": null, "obs": "Determine na \"Ordem\" a prioridade para que o sistema faça a separação, sendo o mais prioritário começando pelo número 1 (um)."}, {"item": "4 -  Endereços de Checkouts", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "WMS » Cadastros » Área de Conferência", "campo": "aba/Endereços", "obs": "A marcação \"Exclusivo p/ Conferência\" é habilitada pela ativação do parâmetro \"Separação por Área de Conferência no WMS? - SEPAREACONFWMS\" e faz parte do Processo de Separação e Conferência por Área no WMS. Os endereços que possuírem esta marcação, serão identificados como endereços para Checkouts (balcões de conferência)."}, {"item": "5 - Endereços de Conexão", "rotina": null, "vinculo": null, "campo": null, "obs": "Não há"}]}, {"titulo": "6 - Endereços de Docas.", "itens": [{"item": "Tipo - Entrada", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "WMS » Cadastros » Docas", "campo": null, "obs": null}, {"item": "Tipo - Saída", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "WMS » Cadastros » Docas", "campo": null, "obs": null}, {"item": "Tipo - Balcão", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "WMS » Cadastros » Docas", "campo": null, "obs": null}]}, {"titulo": "6 - Endereços Virtuais:", "itens": [{"item": "1 - End. Indefinido para Movimentação;", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "End. Indefinido para Movimentação;", "obs": "O campo \"Endereço indefinido para movimentação\" determina qual é o endereço indefinido que será usado nas movimentações pró-ativas, campo utilizado internamente pelo sistema."}, {"item": "2 - Endereço Indefinido para Armazenagem;", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Endereço Indefinido para Armazenagem;", "obs": "No campo \"Cód. End. Armazenamento Indefinido\" indique um endereço de armazenamento indefinido que é utilizado durante a geração de tarefas de armazenagem, quando nenhuma regra de armazenagem é satisfeita. Deste modo, é gerada tarefa com a quantidade restante a armazenar para o endereço definido neste campo."}, {"item": "3 - Retorno de Expedição", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Endereço para retorno de expedição:", "obs": "O \"Endereço para retorno de expedição\" é utilizado para retornar as mercadorias para os endereços de picking/pulmão, mercadorias oriundas de separações canceladas no WMS. Esse endereço deve ser cadastrado na tela Endereços de Armazenamento."}, {"item": "4 - Checkout Indefinido", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Endereço de checkout indefinido:", "obs": "Endereço no qual o WMS aloca o estoque no envio das tarefas de separação, até que seja informado o checkout fisico."}]}, {"titulo": "7- Endereços Especiais:", "itens": [{"item": "1 - Avaria", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Cód. End. Avaria:", "obs": "O endereço no almoxarifado/estoque onde produtos com avaria serão alocados deve ser indicado no campo \"Cód. End. Avaria\"."}, {"item": "2 - Perda", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Cód. End. Perda:", "obs": "Aponte o endereço no almoxarifado/estoque onde produtos perdidos/vencidos/danificados serão alocados, através do campo \"Cód. End. Perda\"."}, {"item": "3 - Sobra", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Cód. End. Sobra:", "obs": "Informe no campo \"Cód. End. Sobra\" o endereço no almoxarifado/estoque onde produtos oriundos de sobra serão alocados."}, {"item": "4 - Divergencia", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Cód. End. Divergência:", "obs": "Através do campo \"Cód. End. Divergência\" especifique o endereço no almoxarifado/estoque onde produtos divergentes serão alocados."}, {"item": "5 - Garantia", "rotina": "WMS » Cadastros » Endereço de Armazenamento", "vinculo": "Comercial » Preferências » Empresa » aba/WMS", "campo": "Endereço especial de garantia:", "obs": "Configure no campo \"Endereço especial de Garantia\" o endereço onde serão separados os produtos que são enviados ao WMS. Para fazer a separação dos produtos constantes desse endereço, o Tipo de Operação - TOP deverá estar marcado com a opção \"Envio em Garantia\", assim serão separadas diretamente no endereço configurado no referido campo, independente se os produtos da nota pertençam a alguma Área de Separação."}]}, {"titulo": "CADASTRO:", "itens": [{"item": "4.1 - Area de Armazenagem.", "rotina": "WMS » Cadastros » Área de Armazenagem", "vinculo": null, "campo": null, "obs": null}, {"item": "4.2 - Areas de Separação.", "rotina": "WMS » Cadastros » Área de Separação", "vinculo": null, "campo": null, "obs": "Importante: esta tela será apresentada para utilização, apenas se o parâmetro \"Separação por Área de Conferência no WMS? - SEPAREACONFWMS\" estiver ativado.\n\nNesta tela, devem ser realizados os cadastros das Áreas de Separação a serem utilizadas na rotina WMS."}, {"item": "4.3 - Areas de Conferencia.", "rotina": "WMS » Cadastros » Área de Conferência", "vinculo": null, "campo": null, "obs": null}]}]}, {"categoria": "WMS  - ESTRATEGIA PARA ARMAZENAGEM(Geração de Tarefas)", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "1.1 - Configurar os Algoritmo de Armazenagem(pikcing, Endereços Vazios e Completar Endereço).", "rotina": "WMS » Rotinas » Configuração de Armazenagem", "vinculo": "Configurações » Cadastros » Produtos » Produtos » WMS", "campo": "Regra Armazenagem", "obs": "Esta tela permite que você realize a configuração das estratégias (algoritmos) que serão utilizados para geração das tarefas de armazenagem. Você poderá cadastrar quantas configurações forem necessárias, sendo que é possível vincular uma regra à um produto ou à um grupo. Caso o Produto ou o Grupo do Produto não tiver regra configurada, o sistema busca a regra que está marcada como padrão; outro detalhe é que o sistema respeita a ordem em que os algoritmos estão configurados."}, {"item": "1.2 - Produtos Compativeis.", "rotina": "WMS » Cadastros » Produtos Compatíveis", "vinculo": null, "campo": null, "obs": "Através desta tela, você configura a compatibilidade dos produtos para armazenamento. Determine um produto e efetue a seleção de quais outros produtos podem ser armazenados juntamente com o mesmo."}, {"item": "1.3 - Regra para Armazenagem de NF de Dev. Venda.", "rotina": "Configurações » Avançado » Preferências >> WMSREGRARMDEV - Regra de armazenagem para devolues de venda.", "vinculo": null, "campo": null, "obs": "O parâmetro \"Regra de armazenagem para devoluções de venda - WMSREGRARMDEV\" possui três definições possíveis, que são:\n\nUsa Regras de armazenagem: O sistema usa as regras de armazenagem, conforme o comportamento atual.\nPrefere Picking respeitando limite máximo: O sistema respeita a o máximo do picking, contudo caso o máximo do picking seja atingido e ainda tiver produtos a ser armazenados o mesmo respeita a Configuração de Armazenagem.\nPrefere Picking extrapolando limite máximo: O sistema armazena todos os produtos no picking mesmo que a quantidade máxima do picking seja atingida.\nNota: o referido parâmetro não é soberano a Configuração de Armazenagem, caso o produto não tenha nenhuma regra vinculada ou a regra vinculada não tenha nenhuma opção ativa, o sistema não conseguirá gerar as tarefas. Não será analisada pelo sistema, a posição em que o Picking está, ou se o mesmo está ativo; sempre serão geradas tarefas para ele.\n\nObservação: ainda que seja definida alguma das opções de Picking no parâmetro, o WMS evitará de levar para este os produtos com data de validade maior que a existente nos pulmões, aplicando desta forma, o controle por FIFO (First in/First out), ou seja, o primeiro produto a entrar no armazém deverá ser também o primeiro a sair, com a finalidade de evitar a perda por vencimento da mercadoria. Deste modo, caso existam pulmões com a data de validade menor do que a que está para ser armazenada, as tarefas não serão geradas para Picking."}, {"item": "1.4 - Priorizar a Menor data de Validade no PICKING.", "rotina": "Configurações » Avançado » Preferências >>WMSDTVALMINPICK - Preferência de data de validade minima no picking", "vinculo": null, "campo": null, "obs": "com o parâmetro \"Preferência de data de validade minima no picking em tarefa do recebimento - WMSDTVALMINPICK\" habilitado, o sistema irá priorizar os produtos com a data de validade mínima para realizar o picking, ou seja, se houver 2 ou mais produtos com o mesmo lote/controle, mas com datas de validade diferentes, aquele com a data menor (mais próximo a vencer) será priorizado."}, {"item": "1.5 - Armazenar utilizando LxC(Norma de Paletização)", "rotina": "Clique para ver as configurações.", "vinculo": null, "campo": null, "obs": "Usar lastro x camada: Através desta marcação, será determinado se a armazenagem respeitará as regras de lastro x camada configuradas para o produto."}, {"item": "1.6 -  Geração automatica de Tarefas de Armazenagem(job)", "rotina": "REGCONFARMAUTO - Registro de conferência c/ armazenagem automática.", "vinculo": null, "campo": null, "obs": "\"Registro de conferência c/ armazenagem automática - REGCONFARMAUTO\". Após a geração das tarefas, o sistema bloqueia os endereços de destino (endereços de armazenagem); assim, se houverem divergências, elas serão tratadas sem correr o risco do produto ser movimentado."}, {"item": "1.7 - FIFO(First In, First Out/o primeiro a entrar é o primeiro a sair)", "rotina": "Não faz o controle.", "vinculo": null, "campo": null, "obs": "O método FIFO é um sistema de armazenagem que trabalha conforme a sequência da entrada de mercadorias no estoque, sempre priorizando o despacho daqueles lotes que chegaram primeiro. Como diz o nome \"First In First Out\", o primeiro que entra é o primeiro que sai; dessa forma, é possível ter um maior controle de armazenagem.\n\nO FIFO estipula a rotação de mercadorias e faz movimentar e ordenar a saída dos produtos, para que aquele que está há mais tempo no estoque saia primeiro, seja qual for o produto: um insumo, uma matéria-prima, uma mercadoria ou produtos acabados.\n\nAlém disso, esse sistema determina a ordem de saída dos lotes, ou seja, o primeiro que chega ao estoque também será o primeiro a sair. Sendo assim, nas filas constituídas por essa categoria de sistema, os produtos serão comercializados por ordem de chegada.\n\nDessa forma é possível ter um controle de estoque mais assertivo, assegurando uma atualização constante do estoque, não deixando os produtos \"envelhecerem\" ou ultrapassarem a sua data de recebimento."}, {"item": "1.8 - FEFO(“First expired, first out”, que é “Primeiro a vencer, primeiro a sair”)", "rotina": "Não faz o controle.", "vinculo": null, "campo": null, "obs": "O controle de validade é uma ferramenta fundamental para um software de gerenciamento de estoques. Com esta ferramenta é possível controlar desde a entrada até a saída dos produtos, que exigem este controle, disponibilizando informações quanto ao \"Shelf Life\" do Produto em toda a cadeia de abastecimento.\n\nPara que este controle seja feito de forma eficiente, é necessário que as informações e configurações tenham exatidão, caso existam informações divergentes, produtos poderão ter seu controle comprometido e por consequência vencerem no estoque. As informações quanto ao Shelf Life dos produtos, devem ser solicitadas aos fornecedores, pois são estes que detêm os dados corretos e confiáveis."}, {"item": "1.9 - LOTE UNICO por ENDEREÇO", "rotina": "Não faz o controle.", "vinculo": null, "campo": null, "obs": "A marcação Lote Único será exibida nos Endereços apenas se o parâmetro \"Utiliza lote único por endereço? - LOTEUNICOXEND\" estiver ligado e poderá ser habilitado se a marcação Permite expedição for selecionada.\n\nNota: os produtos cadastrados nos endereços que possuírem o Lote Único, devem ser controlados por lote.\n\nObservação: atualmente, o Lote Único não trabalha com separação por esteiras.\n\nAlém disso, para a realização dos tipos de Ressuprimentos Corretivo, Automático e Preventivo com Lote Único, os endereços de picking devem estar com estoque zerado ou o produto do pulmão com o mesmo lote de picking."}]}]}, {"categoria": "WMS  - GESTÃO DE MÃO DE OBRA x TAREFA x UNIDADE E AREA DE TRABALHO.", "macro": "WMS", "subsecoes": [{"titulo": "CADASTRO: APTIDÃO POR EQUIPAMENTO X TAREFA", "itens": [{"item": "1.1 - Cadastro de Tipo de Equipamento", "rotina": "WMS » Cadastros » Tipos de Equipamento", "vinculo": null, "campo": null, "obs": "Esta tela está destinada à realização do cadastro dos Equipamentos relacionados à rotina do WMS, exemplo: Paleteira, Empilhadeira."}, {"item": "1.2 - Cadastro de Equipamento", "rotina": "WMS » Cadastros » Cadastro de Equipamentos", "vinculo": null, "campo": null, "obs": "Uma vez que todos os Tipos de Equipamentos já tenham sido cadastrados, você deve cadastrar nessa tela, o Equipamento individual. Esse cadastro permitirá que sejam extraídos relatórios de produtividade por equipamentos, demonstrando qual equipamento está sendo mais utilizado.\n\nCadastre nessa tela, os Equipamentos que serão utilizados na movimentação de mercadorias no Armazém. São apresentadas aqui, as Tarefas que podem ser executadas pelo Equipamento e as Unidades que são permitidas e suportadas por ele, conforme o tipo correspondente."}]}, {"titulo": "CADASTRO:Aptidão por Operador. (Usuario x Tarefa).", "itens": [{"item": "2.1 - Configuração de Usuario(Tarefa unidade permitida)", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": null, "campo": null, "obs": "Esta tela tem o objetivo de vincular tarefas e unidades permitidas aos usuários do Módulo WMS, podendo vincular também, validações para os mesmos."}, {"item": "2.2 - Grupo de Endereços", "rotina": "WMS » Cadastros » Grupos de Endereços", "vinculo": null, "campo": null, "obs": "Essa tela serve para que o Gestor do WMS possa alocar os operadores em áreas de trabalho específicas, determinadas por faixas de endereços. Uma vez configurada uma faixa de endereço e alocado um operador, será possível determinar qual(is) atividade(s) esse operador poderá executar dentro daquela faixa configurada, podendo ser uma Separação, Reabastecimento, Armazenamento, Transferência ou Inventário.\n\nInicialmente, deve ser cadastrado o nome da área que reflete na área de trabalho dentro do armazém."}]}]}, {"categoria": "WMS  - MOTIVO DE CORTE E DIVERGENCIA", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "1.1 - Motivo de Corte", "rotina": "WMS » Cadastros » Motivos de Corte", "vinculo": null, "campo": null, "obs": "Nesta tela você cadastra os Motivos de Corte, visando a obtenção de dados estatísticos.\nImportante: esta tela será apresentada para utilização apenas se o parâmetro \"Motivo de corte obrigatório - MOTCORTEOBRIG\" esteja ativado."}, {"item": "1.2 - Motivo de Divergencia(Entrada e Saída).", "rotina": "WMS » Cadastros » Motivo de Divergência", "vinculo": null, "campo": null, "obs": "Esta tela possibilita que o usuário realize o cadastro dos motivos de divergências levantados em sua rotina operacional."}, {"item": "1.3 - Liberação de Ocorrencia", "rotina": "Configurações » Avançado » Preferências » WMSREGOCOR - Configurao de registro de ocorrncias do WMS", "vinculo": null, "campo": null, "obs": "A rotina de Liberação de Ocorrências tem a finalidade de permitir a liberação ou o cancelamento de uma solicitação de liberação de ocorrência."}]}]}, {"categoria": "WMS  - TIPOS DE CONFERENCIA DE ENTRADA", "macro": "WMS", "subsecoes": [{"titulo": "Tarefas Disponiveis", "itens": [{"item": "1.1 - Conferencia de Entrada", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": null, "campo": null, "obs": "Conferencia que exige que todos os SKUs da NF estejam conferidos para que sejam devidamente Armazenados."}, {"item": "1.2 - Conferencia Parcial de Entrada", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": null, "campo": null, "obs": "A Conferência Parcial de Entrada é um dos tipos de tarefas possíveis de se executar a conferência no Recebimento de Mercadorias.  Essa tarefa permite conferir um produto dentre outros de uma nota e já realizar a armazenagem.  \n\nEsse tipo de conferência atende produtos com prioridades para serem armazenados, assim, não se faz necessária a conferência de todos os produtos da nota para só então enviar para a armazenagem como é feito na tarefa de Conferência. Sendo assim, o produto que já possui vendas registradas e está aguardando a entrada pode ser o primeiro a ser conferido e armazenado."}, {"item": "1.3 - Registro de Conferencia", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": null, "campo": null, "obs": "O Registro de Conferência trata-se de uma tarefa de conferência que torna o processo de armazenagem mais ágil e é indicado para operações onde há pouco espaço para recebimento, assim, à medida que a conferência for realizada, os produtos já serão direcionados para a armazenagem. Também é utilizado nessa tarefa, o conceito de U.M.A (Unidade de Movimentação de Armazenagem).\n\nUtilizando a geração de tarefas automáticas através de um job, esse mecanismo faz com que os produtos recebidos não fiquem parados na doca, otimizando o espaço de recebimento da mesma."}, {"item": "1.4 - Registro de Conferencia de Entrada(Rotina SankhyaOM).", "rotina": "WMS » Rotinas » Registro de Conferência de Entrada", "vinculo": null, "campo": null, "obs": "Nessa tela você poderá realizar a conferência de notas de entrada. Essa rotina deve ser utilizada por aqueles que não utilizam os coletores nas realizações das conferências de recebimento."}]}]}, {"categoria": "WMS  - CONFIG.MODELO DE NOTA/SERIE/TOPs/lOCAL", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Nota modelo sobra estoque WMS (Entrada):", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Nos campos \"Nota modelo perda estoque WMS (Entrada)\" e \"Nota modelo sobra estoque WMS (Saída)\" deverão ser configurados os modelos de nota para perda e entrada de estoque no WMS respectivamente, que são gerados através da tela Consulta Estoque com Ocorrências."}, {"item": "Nota modelo perda estoque WMS (Saída):", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Nos campos \"Nota modelo perda estoque WMS (Entrada)\" e \"Nota modelo sobra estoque WMS (Saída)\" deverão ser configurados os modelos de nota para perda e entrada de estoque no WMS respectivamente, que são gerados através da tela Consulta Estoque com Ocorrências."}, {"item": "Local para ajuste de estoque:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Utilize o campo \"Local para ajuste de estoque\" para definir o local padrão que será considerado no momento do ajuste de estoque entre ERP x WMS. Ao executar a rotina de ajuste pelo Sankhya Om, o sistema criará as Notas de Ajuste no WMS, considerando neste o local definido no campo."}, {"item": "Modelo Retor. de Est. Gerencial WMS(Venda):", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "O modelo configurado no campo \"Modelo Retor. de Est. Gerencial WMS(Venda)\" será utilizado para criar um novo recebimento, gerado a partir de uma NF de Devolução de Venda, atualizando apenas o estoque do WMS."}, {"item": "Série p/ devolução de mercadorias:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "No campo \"Série p/ devolução de mercadorias\" você indicará qual será a série da nota gerada no processo de conferência de entrada citado anteriormente. Este campo trabalha simultaneamente com o campo \"TOP p/ Devolução de Mercadorias\", da seguinte forma:"}, {"item": "TOP p/ devolução de mercadorias:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "indicado no campo \"TOP p/ Devolução de Mercadorias\". Este Tipo de operação - TOP deverá estar configurado com o campo \"Atualização do Estoque\" aba \"Geral\" opção \"Entrar\" selecionada e no campo \"Financeiro\" aba \"Geral\" opção \"não atualizar\" indicada."}]}]}, {"categoria": "WMS - CONFIGURAÇÕES DE ENVIO DE PEDIDOS PARA EXPEDIÇÃO:", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Utiliza doca automaticamente separações balcão:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Quando a opção \"Utiliza doca automaticamente separações balcão\" estiver selecionada, no momento de enviar um pedido para separação, o sistema buscará a doca automaticamente sem a necessidade de você escolher a doca para a separação balcão."}, {"item": "Considerar armazenagens pendentes no envio para expedição:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Marcando a \"Considerar armazenagens pendentes no envio para expedição\" opção, ao enviar um pedido para a separação, caso o estoque do picking não seja o suficiente para atender a demanda, o sistema irá gerar um reabastecimento ao qual poderá extrapolar o estoque máximo do picking. Somente após a execução do reabastecimento é que poderá ser feita a tarefa de separação."}, {"item": "Envio ped. balcão considera entradas pendentes:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Ao fazer o envio para expedição de um pedido cuja separação é para balcão, quando a opção \"Envio ped. balcão considera entradas pendentes\" estiver marcada, o sistema irá considerar as entradas pendentes, e irá amarrar a separação ao recebimento."}, {"item": "Tratamento p/falta de estoque no envio da OC:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "Quando o estoque necessário para atender a OC não for o suficiente no WMS, ao fazer o envio da separação e a marcação \"Tratamento p/ falta de estoque no envio da OC\" estiver selecionada, o sistema apresentará a tela produtos com falta de estoque no WMS, onde você poderá tomar as seguintes ações de acordo com a decisão do corte:\n\nCorte Total: o sistema envia todos os itens menos a quantidade cortada;\nRetirar da O.C: o sistema vai tirar este pedido da OC limpando o campo Ordem de Carga (TGFCAB);\nGerar novo Pedido: o sistema gera um novo pedido com o(s) item(s) cortado(s), mantendo os dados do cabeçalho do pedido original."}, {"item": "Tipo de corte na separação:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": null, "campo": null, "obs": "O campo \"Tipo de Corte na separação\" é utilizado na rotina de corte, nos casos onde a separação é feita para pedidos agrupados. Quando o referido campo estiver com a opção \"Maior Quantidade\" selecionada, o sistema tentará fazer o corte no pedido que tenha a maior quantidade dos produtos. Se não conseguir fazer o corte total em apenas um pedido, pegará o próximo pedido da lista com maior quantidade. Caso esteja configurado com a opção \"Menor Quantidade\", o sistema tentará fazer o corte no pedido que tenha a menor quantidade dos produtos. Se não conseguir fazer o corte total em apenas um pedido, pegará o próximo pedido da lista com menor quantidade. Estando configurado com a opção \"Proporcionalizado\", o sistema tentará fazer o corte proporcionalizando nos pedidos encontrados, onde a lógica de ordenação é em ordem crescente pelo número único do pedido e data de negociação."}]}]}, {"categoria": "WMS - TIPOS DE SEPARAÇÃO:", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Separação(Picking Discreto)", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": "WMS » Cadastros » Área de Separação » ABA/GERAL » Tipo: Por Pedido/Produto", "campo": "Separação convencial - Pedido a pedido, desmebrando em Areas de Separção, seja por \"Pedido/Produto\".", "obs": null}, {"item": "Separação por Esteira", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": "WMS » Cadastros » Área de Separação » ABA/GERAL » Posição na Esteira", "campo": "Defina no campo \"Posição na esteira de separação\", o local correspondente à Área de Separação em questão, na esteira de separação; esta configuração é válida em separações Flow Rack. Temos as seguintes opções:                                                                                                      Nenhuma: Esta opção não corresponde à separação Flow Rack;\nInicial: Por esta opção, a Área de Separação em questão está localizada na parte inicial da esteira;\nIntermediária: Temos aqui que a Área de Separação está localizada na parte mediana da esteira;\nTerminal: Por esta opção, a Área de Separação em questão está localizada na parte final da esteira.", "obs": null}, {"item": "Separação por Area", "rotina": "Utiliza a tarefa: Separação", "vinculo": "WMS » Cadastros » Área de Separação » ABA/GERAL » Agrupar Pedidos", "campo": "A marcação \"Agrupar pedidos\" permite que os produtos que pertencem à uma referida Área de Separação e se encontram em pedidos que possuem a mesma ordem de carga, sejam agrupados em uma única separação \"Mãe\". Essa ligação de separações filhas e mães acontece por meio da tabela TGWSVAR.", "obs": null}, {"item": "Separação Agrupada", "rotina": "Utiliza a tarefa: Separação", "vinculo": "WMS » Cadastros » Área de Separação » Aba/Geral » Separação agrupada por produto", "campo": "Efetuando a marcação \"Utiliza separação agrupada por produto\", você estará determinando que nesta Área de Separação será feito o uso da separação agrupada por produto. Esta marcação aumenta a eficiência e produtividade ao possibilitar que operadores separem múltiplos pedidos em um único deslocamento, minimizando o tempo percorrido sem demanda. O sistema guia o usuário para a separação solicitando os endereços de checkouts necessários, que na verdade são representados pelo equipamento físico (caixa, carrinho, gaiola com divisórias ou contêineres de separação).", "obs": null}, {"item": "Separação Pulmão", "rotina": "Utiliza a tarefa: Separação", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS  » Utiliza separação pulmão:", "campo": "Para que a separação de mercadorias seja efetuada diretamente do pulmão, efetue a marcação da opção \"Utiliza separação pulmão\".", "obs": null}, {"item": "Separação Parcial no Pulmão.", "rotina": "Utiliza a tarefa: Separação", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS  » Utiliza separação Parcial pulmão:", "campo": "A marcação \"Utiliza separação parcial no pulmão:\" acionará no sistema a separação parcial nos endereços de pulmão, sendo que esta separação ocorrerá caso exista um percentual informado no campo \"Percentual para separação (0-100):\" no Cadastro de Produtos.", "obs": null}, {"item": "Separação Balcão", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": "Comercial » Arquivo » Cadastros » Tipos de Operação - TOP » Separação em Balcão:", "campo": "São caracteristicas de pedidos realizados diretamente no CD, e não são transportados por Ordem de Carga.", "obs": null}]}]}, {"categoria": "WMS - IMPRESSÃO DE ETIQUETAS DE VOLUME(Por Pedido e por OC).", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Modelo padrão de Etiqueta de Volume:", "rotina": "Configurações » Avançado » Relatórios Formatados", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Modelo padrão de Etiqueta de Volume:", "obs": "Não se aplica"}, {"item": "Impressora padrão da Etiqueta de Volume:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Impressora padrão da Etiqueta de Volume:", "obs": "Não se aplica"}, {"item": "Impressão de etiqueta de volumes:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Impressão de etiqueta de volumes:", "obs": "Não se aplica"}, {"item": "Imprimir etiquetas de volume na conferência:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Imprimir etiquetas de volume na conferência:", "obs": "Clique para ver os parametros incompativeis"}, {"item": "Imprime etiquetas de separação por OC:", "rotina": "Configurações » Avançado » Preferências » ABA/WMS", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Imprime etiquetas de separação por OC:", "obs": "Não se aplica"}]}]}, {"categoria": "WMS - REABASTECIMENTO(CORRETIVO E PREVENTIVO)", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "TIPO:", "rotina": "Automatico?", "vinculo": "ROTINA DA CONFIGURAÇÃO", "campo": "Opção:", "obs": "Momento que vai ser Gerado"}, {"item": "Reabastecimento Corretivo", "rotina": "Sim", "vinculo": "Configurações » Avançado » Preferências » ABA/WMS", "campo": "Gerar reabastecimento corretivo: / Obs: Endereços de Picking tem que estar com as configurações de Estoque Maximo configurado.", "obs": "Envio da Ordem de Carga"}, {"item": "Reabastecimento Preventivo(Rotina)", "rotina": "Não", "vinculo": "WMS » Rotinas » Ressuprimento Preventivo", "campo": "Obs.Endereços de Picking tem que estar com as configurações de Estoque Maximo configurado.", "obs": "Geração manual"}, {"item": "Reabastecimento Preventivo", "rotina": "Sim", "vinculo": "Configurações » Avançado » Preferências", "campo": "LIGAREABESTWMS", "obs": "Após o envio da Separação p/Destino(efetiva a retirada do produto no picking), e o estoque do picking atinge o Est.minimo/abaixo do minimo."}, {"item": "Reabastecimento Corretivo", "rotina": "Sim", "vinculo": "Configurações » Avançado » Preferências", "campo": "WMSRECESTOCOR - Tentar recuperar estoque na ocorrência?", "obs": "Após Registro de Ocorrencia na Separação."}]}]}, {"categoria": "WMS -  OTIMIZAÇÃO DE ENDEREÇO/ESPAÇO", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "ROTINA/TAREFA", "rotina": "Como conceder acesso?", "vinculo": null, "campo": null, "obs": null}, {"item": "WMS » Rotinas » Remanejamento de Estoque", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Para um melhor aproveitamento do espaço físico de um armazém, é necessário realizar um remanejamento do estoque nos endereços de pulmão, ou seja, executar uma análise visando identificar quais produtos não estão ocupando o espaço total do endereço.\n\nA tela Remanejamento de Estoque, localizada no menu \"WMS > Rotinas\" de nosso sistema, permite que seja feita a referida análise e retornadas as melhores oportunidades de modificação do estoque. Os produtos selecionados devem ser transferidos para outros endereços que sejam de menor tamanho ou que estejam ocupados com produtos compatíveis (podem ser armazenados juntos).", "campo": null, "obs": null}, {"item": "WMS » Rotinas » Transferência entre Endereços", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Através desta tela, você pode selecionar um produto de um determinado endereço e transferi-lo para outro endereço devidamente configurado, sendo que, este processo leva em consideração a quantidade informada do produto e a sua compatibilidade com o tamanho do endereço destinatário.", "campo": null, "obs": null}, {"item": "Movimentação Pro-Ativa(Coletor)", "rotina": "WMS » Rotinas » Configurações por Usuário", "vinculo": "A movimentação pró-ativa deve ser utilizada com consciência. O objetivo desta função é fazer a organização manual do depósito, ficando na responsabilidade do usuário definir de onde retirar e onde colocar o produto. A ideia desta função é apenas a de reorganização de endereços de pulmão, maximizando endereços vazios.", "campo": null, "obs": null}]}]}, {"categoria": "WMS - GESTÃO E ACOMPANHAMENTO DAS OPERAÇÕES NO WMS.", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Rotina/Opção", "rotina": "Como conceder o acesso?", "vinculo": null, "campo": null, "obs": null}, {"item": "1.1 - Gerencia do WMS", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Através da tela Gerência de WMS, você pode realizar o acompanhamento de todos os processos executados no WMS que se encontram pendentes ou em execução, permitindo a alocação de recursos, bem como sua priorização. Todos os procedimentos concretizados no WMS poderão ser visualizados e monitorados por meio desta tela.", "campo": null, "obs": null}, {"item": "1.2 - Recebimento de Mercadoria", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Essa tela possibilita que o gestor do armazém administre o recebimento das mercadorias da empresa que está responsável; ela auxilia no gerenciamento dos itens que entram na posse da empresa, tornando possível a tomada de decisões, visando um melhor gerenciamento do armazém.", "campo": null, "obs": null}, {"item": "1.3 - Expedição de Mercadoria", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Essa tela possibilita que o gestor do armazém administre as Expedições das mercadorias da empresa que está responsável; ela auxilia no gerenciamento dos itens que saem  da posse da empresa, tornando possível a tomada de decisões, visando um melhor gerenciamento do armazém e do Processo de Expedição dos Pedidos.", "campo": null, "obs": null}, {"item": "1.4 - Consulta de Checkout", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Nesta tela você pode visualizar os detalhes da situação de estoque de cada checkout.\n\nImportante: esta tela será apresentada para utilização, apenas se o parâmetro \"Separação por Área de Conferência no WMS? - SEPAREACONFWMS\" estiver habilitado.", "campo": null, "obs": null}, {"item": "1.5 - Consulta Estoque com ocorrencia.", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Por meio dessa tela, você pode realizar a consulta de estoque dos endereços destinados a avarias, perdas, sobras e divergências.", "campo": null, "obs": null}, {"item": "1.6 - Fila de Tarefas", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Esta tela está destinada à realização de consultas ao andamento das tarefas que estão sendo realizadas; é uma tela de acompanhamento do progresso das tarefas e suas respectivas priorizações.", "campo": null, "obs": null}, {"item": "1.7 - Gestão de U.M.A", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Por meio desta tela é possível realizar consultas e fazer a gestão dos Unitizadores (UMA) de forma otimizada.", "campo": null, "obs": null}]}]}, {"categoria": "WMS  - CONSULTA DE ESTOQUE E RASTREABILIDADE DAS MOVIMENTAÇÕES", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Rotina/Opção", "rotina": "Como conceder o acesso?", "vinculo": null, "campo": null, "obs": null}, {"item": "1.1 - Estoque/ Endereçamento WMS", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Nesta tela são apresentados os estoques por endereços do WMS. Através dela, você terá informações por endereço, apresentando as entradas e saídas pendentes, estoques atual e disponível, filtrar endereços vazios, etc.", "campo": null, "obs": null}, {"item": "1.2 - Movimentação por Produto", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Você visualizará todos os movimentos realizados nas referidas telas, sendo possível verificar os movimentos de um determinado produto.\n\nNota: quando uma separação for originada de uma nota de transferência, os campos \"Nro. Único Nota\", \"Nro. Nota\" e \"Tipo Operação\" ficarão vazios visto que estas informações não são registradas na tabela de separação (TGWSEP).\n\nAo utilizar o filtro \"Parceiro\", você poderá visualizar os parceiros que realizaram movimentações, incluindo aqueles que realizam o Controle de Estoque de Terceiros.\n\nNo campo \"Empresa\" serão apresentadas todas as empresas Controladas pelo WMS.", "campo": null, "obs": null}, {"item": "1.2 - Movimentação por Endereço", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Será possível visualizar todos os movimentos realizados na referida tela, sendo possível visualizar os movimentos de um determinado endereço.\n\nAtravés do campo Endereço é possível filtrar qualquer endereço, tanto de origem como de destino.\n\nNota: quando uma separação for originada de uma nota de transferência, os campos \"Nro. Único Nota\", \"Nro. Nota\" e \"Tipo Operação\" ficarão vazios, isto porque essas informações não são registradas na tabela de separação (TGWSEP).\n\nAo utilizar o filtro \"Parceiro\", você poderá visualizar os parceiros que realizaram movimentações, incluindo aqueles que realizam o Controle de Estoque de Terceiros.", "campo": null, "obs": null}]}]}, {"categoria": "WMS  - GESTÃO DE INDICADORES D- KPIs", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "1.Recebimento", "rotina": null, "vinculo": null, "campo": null, "obs": "Disponivel no SankhyaPlace"}]}]}, {"categoria": "WMS - FATURAMENTO AUTOMATICO", "macro": "WMS", "subsecoes": [{"titulo": null, "itens": [{"item": "Rotina/Opção", "rotina": "Como conceder o acesso?", "vinculo": null, "campo": null, "obs": null}, {"item": "WMS » Rotinas » Configuração Faturamento Automático", "rotina": "Configurações » Controle de Acesso » Acessos", "vinculo": "Esta tela permite efetuar o cadastro das empresas cujos pedidos devem ser faturados automaticamente, ou seja, temos o faturamento do pedido e a impressão da nota de forma automática ao final do processo de conferência.", "campo": null, "obs": null}]}]}];
+
+</script>
+<script>
+// ==========================================================
+// WMS HUB — app.js
+// Navegação, explorador de tabelas, diagrama de relações, guia
+// ==========================================================
+
+const VIEWS = ['home','tabelas','diagrama','guia','inserir','conhecimento','checklist'];
+const TITLES = {
+  home:'Início',
+  tabelas:'Explorador de Tabelas',
+  diagrama:'Diagrama de Relações',
+  guia:'Guia de Configuração',
+  inserir:'Inserir Informação',
+  conhecimento:'Base de Conhecimento',
+  checklist:'Checklist Detalhado'
+};
+const CRUMBS = {
+  home:'wms-hub / painel',
+  tabelas:'wms-hub / base-de-dados / tabelas',
+  diagrama:'wms-hub / base-de-dados / diagrama',
+  guia:'wms-hub / implantação / guia',
+  inserir:'wms-hub / ia-do-processo / inserir',
+  conhecimento:'wms-hub / ia-do-processo / base-de-conhecimento',
+  checklist:'wms-hub / implantação / checklist-detalhado'
+};
+
+const KB_STORAGE_KEY = 'wms-hub:conhecimento';
+
+let activeModuleFilter = null; // null = todos
+let currentSearch = '';
+
+// ---------- helpers ----------
+function tableByCode(code){
+  for(const mod of DB_TABELAS){
+    for(const it of mod.itens){
+      if(it.tabela === code) return {...it, modulo: mod.modulo};
+    }
+  }
+  return null;
+}
+function relsForTable(code){
+  return DB_REL.filter(r => r.de === code || r.para === code);
+}
+function allTableCodes(){
+  const set = new Set();
+  DB_TABELAS.forEach(m => m.itens.forEach(i => set.add(i.tabela)));
+  return set;
+}
+
+// ---------- navigation ----------
+function goToView(view, opts){
+  opts = opts || {};
+  VIEWS.forEach(v=>{
+    document.getElementById('view-'+v).hidden = (v !== view);
+  });
+  document.querySelectorAll('.menu-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.view === view);
+  });
+  document.getElementById('topbar-title').textContent = TITLES[view];
+  document.getElementById('topbar-crumb').textContent = CRUMBS[view];
+  document.getElementById('global-search-wrap').style.display = (view === 'tabelas') ? 'block' : 'none';
+
+  if(view === 'tabelas') renderTabelas();
+  if(view === 'diagrama') renderDiagrama();
+  if(view === 'guia') renderGuia(opts.pontos);
+  if(view === 'conhecimento') renderKbBoard();
+  if(view === 'inserir') resetKbForm();
+  if(view === 'checklist') renderChecklist();
+
+  document.getElementById('sidebar').classList.remove('open');
+  window.scrollTo(0,0);
+}
+
+document.querySelectorAll('[data-view]').forEach(el=>{
+  el.addEventListener('click', ()=> goToView(el.dataset.view, {pontos: el.dataset.targetPontos}));
+});
+
+// ---------- HOME stats ----------
+function fillStats(){
+  const total = DB_TABELAS.reduce((s,m)=>s+m.itens.length,0);
+  document.getElementById('stat-tabelas').textContent = total;
+  document.getElementById('stat-modulos').textContent = DB_TABELAS.length;
+  document.getElementById('stat-rel').textContent = DB_REL.length;
+  document.getElementById('stat-etapas').textContent = DB_CONFIG.filter(e=>e.etapa.startsWith('Etapa')).length;
+  document.getElementById('cnt-tabelas').textContent = total;
+  document.getElementById('cnt-etapas').textContent = DB_CONFIG.filter(e=>e.etapa.startsWith('Etapa')).length;
+  const kb = loadKB();
+  document.getElementById('stat-kb').textContent = kb.length;
+  document.getElementById('cnt-kb').textContent = kb.length;
+  const totalChecklist = CHECKLIST_IMPLANTACAO.reduce((s,c)=> s + c.subsecoes.reduce((s2,sub)=>s2+sub.itens.length,0), 0);
+  const cntChecklistEl = document.getElementById('cnt-checklist');
+  if(cntChecklistEl) cntChecklistEl.textContent = totalChecklist;
+  const statChecklistEl = document.getElementById('stat-checklist');
+  if(statChecklistEl) statChecklistEl.textContent = totalChecklist;
+}
+
+// ---------- TABELAS view ----------
+function renderModuleFilters(){
+  const wrap = document.getElementById('module-filters');
+  wrap.innerHTML = '';
+  const allPill = document.createElement('div');
+  allPill.className = 'pill' + (activeModuleFilter===null ? ' on' : '');
+  allPill.textContent = 'Todos os módulos';
+  allPill.onclick = ()=>{ activeModuleFilter = null; renderModuleFilters(); renderTabelas(); };
+  wrap.appendChild(allPill);
+  DB_TABELAS.forEach(m=>{
+    const p = document.createElement('div');
+    p.className = 'pill' + (activeModuleFilter===m.modulo ? ' on' : '');
+    p.textContent = m.modulo + ' (' + m.itens.length + ')';
+    p.onclick = ()=>{ activeModuleFilter = (activeModuleFilter===m.modulo) ? null : m.modulo; renderModuleFilters(); renderTabelas(); };
+    wrap.appendChild(p);
+  });
+}
+
+function renderTabelas(){
+  renderModuleFilters();
+  const container = document.getElementById('tabelas-container');
+  container.innerHTML = '';
+  const q = currentSearch.trim().toLowerCase();
+
+  DB_TABELAS.forEach(mod=>{
+    if(activeModuleFilter && mod.modulo !== activeModuleFilter) return;
+    const filtered = mod.itens.filter(it=>{
+      if(!q) return true;
+      return (it.entidade+' '+it.descricao+' '+it.tabela).toLowerCase().includes(q);
+    });
+    if(filtered.length === 0) return;
+
+    const section = document.createElement('div');
+    section.className = 'module-section';
+
+    const head = document.createElement('div');
+    head.className = 'module-head';
+    head.textContent = mod.modulo + ' — ' + filtered.length + ' tabela(s)';
+    section.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'table-grid';
+
+    filtered.forEach(it=>{
+      const row = document.createElement('div');
+      row.className = 'table-row';
+      const rels = relsForTable(it.tabela);
+      row.innerHTML = `
+        <div class="tag-code">${it.tabela}</div>
+        <div>
+          <div class="ent-name">${it.entidade}</div>
+          <div class="ent-desc">${it.descricao}</div>
+        </div>
+        <div>${rels.length ? `<span class="rel-badge">${rels.length} ligação${rels.length>1?'ões':''}</span>` : `<span class="no-rel">sem mapa</span>`}</div>
+      `;
+      row.onclick = ()=> openDrawer(it.tabela);
+      grid.appendChild(row);
+    });
+
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+
+  if(container.innerHTML === ''){
+    container.innerHTML = '<div style="color:var(--text-faint);padding:40px;text-align:center;font-family:var(--mono);font-size:12.5px;">nenhuma tabela encontrada para essa busca</div>';
+  }
+}
+
+document.getElementById('global-search').addEventListener('input', e=>{
+  currentSearch = e.target.value;
+  renderTabelas();
+});
+
+// ---------- DRAWER (detalhe da tabela) ----------
+function openDrawer(code){
+  const info = tableByCode(code);
+  const rels = relsForTable(code);
+  const content = document.getElementById('drawer-content');
+
+  let relHtml = '';
+  if(rels.length){
+    relHtml = rels.map(r=>{
+      const other = (r.de === code) ? r.para : r.de;
+      const dir = (r.de === code) ? `${code} → ${r.para}` : `${r.de} → ${code}`;
+      return `<div class="rel-item">
+        <div class="arrow-line">${dir}  <span style="color:var(--text-faint);">· chave: ${r.campo}</span></div>
+        ${r.desc}
+      </div>`;
+    }).join('');
+  } else {
+    relHtml = `<div style="color:var(--text-faint);font-size:12px;">Nenhum relacionamento documentado ainda pra essa tabela — pode ser adicionado conforme for mapeando em projeto.</div>`;
+  }
+
+  content.innerHTML = `
+    <div class="module-tag">${info ? info.modulo : ''}</div>
+    <div class="tag-code" style="display:inline-block;margin-top:6px;">${code}</div>
+    <h3>${info ? info.entidade : code}</h3>
+    <div style="color:var(--text-dim);font-size:13px;">${info ? info.descricao : ''}</div>
+
+    <div class="drawer-section">
+      <h4>Relacionamentos conhecidos</h4>
+      ${relHtml}
+    </div>
+  `;
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('drawer-backdrop').classList.add('show');
+}
+function closeDrawer(){
+  document.getElementById('drawer').classList.remove('show');
+  document.getElementById('drawer-backdrop').classList.remove('show');
+}
+document.getElementById('drawer-close').onclick = closeDrawer;
+document.getElementById('drawer-backdrop').onclick = closeDrawer;
+
+// ---------- DIAGRAMA (SVG) ----------
+function renderDiagrama(){
+  const wrap = document.getElementById('diagram-wrap');
+  wrap.innerHTML = '';
+
+  // build node list from relationships (only tables that appear in DB_REL, grouped loosely)
+  const nodesSet = new Set();
+  DB_REL.forEach(r=>{ nodesSet.add(r.de); nodesSet.add(r.para); });
+  const nodes = Array.from(nodesSet);
+
+  // simple layered layout: group by rough theme buckets for readability
+  const buckets = [
+    {label:'Config. / Cadastro base', codes:['TGFTOP','TGFLOC','TGFPRO','TGFEMP','TGFCAB','TGWEND','TGWARA','TGWDCA']},
+    {label:'Armazenagem', codes:['TGWARM','TGWRFA','TGWRARM']},
+    {label:'Tarefas / Separação', codes:['TGWTAR','TGWITT','TGFITE','TGWSEP','TGWSXN','TGWOND']},
+    {label:'Recebimento / Conferência', codes:['TGWREC','TGWITER','TGWRXN','TGWCON','TGWCOI']},
+    {label:'Estoque', codes:['TGWEST']},
+    {label:'Equipamentos', codes:['TGWEQP','TGWTTE']},
+  ];
+
+  const colW = 210, rowH = 64, padTop = 30, padLeft = 20;
+  const positions = {};
+  let maxRows = 0;
+  buckets.forEach((b, colIdx)=>{
+    const present = b.codes.filter(c=>nodes.includes(c));
+    present.forEach((code, rowIdx)=>{
+      positions[code] = {
+        x: padLeft + colIdx*colW + colW/2,
+        y: padTop + rowIdx*rowH + 40
+      };
+      maxRows = Math.max(maxRows, rowIdx+1);
+    });
+  });
+  const width = padLeft + buckets.length*colW + 40;
+  const height = padTop + maxRows*rowH + 100;
+
+  let svg = `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" style="min-width:100%;">`;
+
+  // column headers
+  buckets.forEach((b, colIdx)=>{
+    const x = padLeft + colIdx*colW + colW/2;
+    svg += `<text x="${x}" y="20" text-anchor="middle" fill="#5c6a90" font-family="JetBrains Mono, monospace" font-size="10" letter-spacing="1">${b.label.toUpperCase()}</text>`;
+  });
+
+  // edges (draw first, under nodes)
+  DB_REL.forEach(r=>{
+    const a = positions[r.de], b = positions[r.para];
+    if(!a || !b) return;
+    const midx = (a.x+b.x)/2;
+    svg += `<path d="M ${a.x} ${a.y} C ${midx} ${a.y}, ${midx} ${b.y}, ${b.x} ${b.y}" fill="none" stroke="#0f5c58" stroke-width="1.6" opacity="0.7"/>`;
+  });
+
+  // nodes
+  Object.keys(positions).forEach(code=>{
+    const p = positions[code];
+    const info = tableByCode(code);
+    svg += `<g class="dnode" data-code="${code}" style="cursor:pointer;">
+      <rect x="${p.x-60}" y="${p.y-16}" width="120" height="32" rx="7" fill="#182746" stroke="#f5b301" stroke-width="1.3"/>
+      <text x="${p.x}" y="${p.y+4}" text-anchor="middle" fill="#f5b301" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">${code}</text>
+    </g>`;
+  });
+
+  svg += `</svg>`;
+  wrap.innerHTML = svg;
+
+  wrap.querySelectorAll('.dnode').forEach(g=>{
+    g.addEventListener('click', ()=> openDrawer(g.dataset.code));
+  });
+}
+
+// ---------- GUIA ----------
+let openEtapaIndex = 0;
+function renderGuia(scrollToPontos){
+  const container = document.getElementById('guia-container');
+  container.innerHTML = '';
+
+  DB_CONFIG.forEach((etapa, idx)=>{
+    const block = document.createElement('div');
+    block.className = 'etapa-block' + (idx === openEtapaIndex ? ' open' : '');
+    block.id = etapa.etapa.startsWith('Pontos') ? 'block-pontos' : ('block-etapa-'+idx);
+
+    const isPontos = etapa.etapa.startsWith('Pontos');
+    const head = document.createElement('div');
+    head.className = 'etapa-head';
+    head.innerHTML = `
+      <div class="etapa-num">${isPontos ? '⚠' : etapa.etapa.replace('Etapa ','')}</div>
+      <div class="t">${etapa.titulo || etapa.etapa}</div>
+      <div class="chev">▶</div>
+    `;
+    head.onclick = ()=>{
+      block.classList.toggle('open');
+    };
+
+    const body = document.createElement('div');
+    body.className = 'etapa-body';
+
+    if(etapa.contexto){
+      body.innerHTML += `<div class="etapa-context">${etapa.contexto}</div>`;
+    }
+
+    if(etapa.itens && etapa.itens.length){
+      let lastSub = null;
+      etapa.itens.forEach(it=>{
+        if(it.sub && it.sub !== lastSub){
+          body.innerHTML += `<div class="sub-label">${it.sub}</div>`;
+          lastSub = it.sub;
+        }
+        body.innerHTML += `
+          <div class="cfg-item">
+            <div class="it">${it.item}</div>
+            <div class="im">${it.importante}</div>
+            <div class="cfg-meta">
+              ${it.rotina ? `<span class="rt">${it.rotina}</span>` : ''}
+              ${it.help ? `<a href="${it.help}" target="_blank" rel="noopener">Help ↗</a>` : ''}
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    if(etapa.pontos && etapa.pontos.length){
+      const ul = document.createElement('ul');
+      ul.className = 'pontos-list';
+      etapa.pontos.forEach(p=>{
+        const li = document.createElement('li');
+        li.innerHTML = `<span>${p}</span>`;
+        ul.appendChild(li);
+      });
+      body.appendChild(ul);
+    }
+
+    block.appendChild(head);
+    block.appendChild(body);
+    container.appendChild(block);
+  });
+
+  if(scrollToPontos){
+    setTimeout(()=>{
+      const el = document.getElementById('block-pontos');
+      if(el){
+        el.classList.add('open');
+        el.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }, 50);
+  }
+}
+
+// ==========================================================
+// IA DO PROCESSO — classificador + base de conhecimento
+// ==========================================================
+
+// ---------- storage (Firestore — compartilhado entre todos que acessam o Hub) ----------
+const KB_COLLECTION = 'conhecimento';
+let kbCache = [];
+let kbReady = false;
+
+function initKbListener(){
+  db.collection(KB_COLLECTION).orderBy('data', 'desc').onSnapshot(
+    snapshot => {
+      kbCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      kbReady = true;
+      fillStats();
+      const conhecimentoView = document.getElementById('view-conhecimento');
+      if(conhecimentoView && !conhecimentoView.hidden) renderKbBoard();
+    },
+    err => {
+      console.error('Erro ao ler a base de conhecimento no Firestore:', err);
+      const board = document.getElementById('kb-board');
+      if(board){
+        board.innerHTML = `<div class="kb-empty" style="grid-column:1/-1;color:var(--danger);">
+          Não consegui conectar na base de conhecimento compartilhada (Firestore).
+          Verifique as regras de acesso do banco ou a conexão com a internet.
+        </div>`;
+      }
+    }
+  );
+}
+
+function loadKB(){
+  return kbCache;
+}
+function addKbEntry(entry){
+  return db.collection(KB_COLLECTION).add(entry);
+}
+function deleteKbEntry(id){
+  return db.collection(KB_COLLECTION).doc(id).delete();
+}
+function catInfo(id){
+  return PROCESS_CATEGORIES.find(c=>c.id===id) || PROCESS_CATEGORIES[PROCESS_CATEGORIES.length-1];
+}
+
+// ---------- classificador ----------
+// Analisa texto livre: pontua por palavra-chave de cada etapa do processo,
+// e dá bônus quando detecta um código de tabela (TGWxxx / TGFxxx) já mapeado
+// para uma etapa (cruzando com o dicionário de tabelas do explorador).
+function analyzeText(text){
+  const t = (text || '').toLowerCase();
+  const scores = {};
+  PROCESS_CATEGORIES.forEach(c => scores[c.id] = 0);
+
+  // 1) pontuação por palavra-chave
+  Object.keys(CATEGORIA_KEYWORDS).forEach(catId=>{
+    CATEGORIA_KEYWORDS[catId].forEach(kw=>{
+      const re = new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      const matches = t.match(re);
+      if(matches) scores[catId] += matches.length * 2;
+    });
+  });
+
+  // 2) detectar códigos de tabela mencionados no texto (TGWxxx, TGFxxx)
+  const codeMatches = (text.match(/\bTG[WF][A-Z0-9]{2,}\b/gi) || []).map(c=>c.toUpperCase());
+  const detectedTables = [];
+  codeMatches.forEach(code=>{
+    const info = tableByCode(code);
+    if(info && !detectedTables.find(d=>d.tabela===code)){
+      detectedTables.push({tabela:code, entidade:info.entidade, modulo:info.modulo});
+    }
+    const cat = TABELA_CATEGORIA[code];
+    if(cat) scores[cat] = (scores[cat]||0) + 5;
+  });
+
+  // 3) detectar entidades lógicas mencionadas pelo nome (ex: "Separação WMS")
+  DB_TABELAS.forEach(mod=>{
+    mod.itens.forEach(it=>{
+      if(it.descricao && it.descricao.length > 4 && t.includes(it.descricao.toLowerCase())){
+        const cat = TABELA_CATEGORIA[it.tabela];
+        if(cat) scores[cat] = (scores[cat]||0) + 3;
+        if(!detectedTables.find(d=>d.tabela===it.tabela)){
+          detectedTables.push({tabela:it.tabela, entidade:it.entidade, modulo:mod.modulo});
+        }
+      }
+    });
+  });
+
+  const ranked = PROCESS_CATEGORIES
+    .map(c => ({id:c.id, label:c.label, cor:c.cor, score:scores[c.id]||0}))
+    .sort((a,b)=> b.score - a.score);
+
+  const maxScore = Math.max(1, ranked[0].score);
+  const totalScore = ranked.reduce((s,r)=>s+r.score,0) || 1;
+  const confidence = Math.round((ranked[0].score / totalScore) * 100);
+
+  return {
+    ranked, maxScore, detectedTables,
+    suggested: ranked[0].score > 0 ? ranked[0].id : 'geral',
+    confidence: ranked[0].score > 0 ? confidence : 0
+  };
+}
+
+let lastAnalysis = null;
+
+function resetKbForm(){
+  document.getElementById('kb-titulo').value = '';
+  document.getElementById('kb-texto').value = '';
+  document.getElementById('kb-analysis').classList.remove('show');
+  lastAnalysis = null;
+}
+
+function renderAnalysis(analysis){
+  const scoresWrap = document.getElementById('kb-scores');
+  scoresWrap.innerHTML = analysis.ranked.map(r=>{
+    const pct = Math.round((r.score / analysis.maxScore) * 100);
+    return `
+      <div class="cat-score-row">
+        <div class="lbl">${r.label}</div>
+        <div class="cat-score-bar-wrap"><div class="cat-score-bar" style="width:${pct}%;background:${r.cor};"></div></div>
+        <div class="cat-score-val">${r.score}</div>
+      </div>
+    `;
+  }).join('');
+
+  const detectedWrap = document.getElementById('kb-detected-wrap');
+  const detectedEl = document.getElementById('kb-detected');
+  if(analysis.detectedTables.length){
+    detectedWrap.style.display = 'block';
+    detectedEl.innerHTML = analysis.detectedTables.map(d=>
+      `<span class="rel-badge" style="cursor:pointer;" data-code="${d.tabela}">${d.tabela} · ${d.entidade}</span>`
+    ).join('');
+    detectedEl.querySelectorAll('[data-code]').forEach(el=>{
+      el.onclick = ()=> openDrawer(el.dataset.code);
+    });
+  } else {
+    detectedWrap.style.display = 'none';
+  }
+
+  const sugg = catInfo(analysis.suggested);
+  const banner = document.getElementById('kb-suggestion');
+  if(analysis.confidence > 0){
+    banner.innerHTML = `A IA sugere classificar em <b>${sugg.label}</b> (confiança ${analysis.confidence}%). Revise e confirme abaixo.`;
+  } else {
+    banner.innerHTML = `Não encontrei palavras-chave fortes o suficiente — classificado como <b>Geral / Configuração</b> por padrão. Ajuste manualmente se souber a etapa certa.`;
+  }
+
+  const select = document.getElementById('kb-categoria-final');
+  select.innerHTML = PROCESS_CATEGORIES.map(c=>
+    `<option value="${c.id}" ${c.id===analysis.suggested?'selected':''}>${c.label}</option>`
+  ).join('');
+
+  document.getElementById('kb-analysis').classList.add('show');
+}
+
+document.getElementById('kb-analisar-btn').addEventListener('click', ()=>{
+  const texto = document.getElementById('kb-texto').value.trim();
+  if(!texto){
+    alert('Digite ou cole uma informação antes de analisar.');
+    return;
+  }
+  lastAnalysis = analyzeText(texto);
+  renderAnalysis(lastAnalysis);
+});
+
+document.getElementById('kb-cancelar-btn').addEventListener('click', resetKbForm);
+
+document.getElementById('kb-salvar-btn').addEventListener('click', ()=>{
+  const texto = document.getElementById('kb-texto').value.trim();
+  const titulo = document.getElementById('kb-titulo').value.trim() || texto.slice(0,60);
+  const categoria = document.getElementById('kb-categoria-final').value;
+  if(!texto){ return; }
+
+  const btn = document.getElementById('kb-salvar-btn');
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+
+  addKbEntry({
+    titulo, texto, categoria,
+    tabelas: lastAnalysis ? lastAnalysis.detectedTables.map(d=>d.tabela) : [],
+    confianca: lastAnalysis ? lastAnalysis.confidence : 0,
+    data: new Date().toISOString()
+  }).then(()=>{
+    resetKbForm();
+    goToView('conhecimento');
+  }).catch(err=>{
+    console.error(err);
+    alert('Não consegui salvar na base compartilhada. Verifique sua conexão ou as regras do Firestore.');
+  }).finally(()=>{
+    btn.disabled = false;
+    btn.textContent = '✓ Salvar na Base de Conhecimento';
+  });
+});
+
+// ---------- board (Base de Conhecimento) ----------
+let kbSearch = '';
+function renderKbBoard(){
+  const board = document.getElementById('kb-board');
+  board.innerHTML = '';
+  const list = loadKB();
+  const q = kbSearch.trim().toLowerCase();
+
+  PROCESS_CATEGORIES.forEach(cat=>{
+    const items = list.filter(e=>{
+      if(e.categoria !== cat.id) return false;
+      if(!q) return true;
+      return (e.titulo+' '+e.texto).toLowerCase().includes(q);
+    });
+
+    const col = document.createElement('div');
+    col.className = 'kb-col';
+    col.innerHTML = `
+      <div class="kb-col-head">
+        <span class="dot" style="background:${cat.cor};"></span>
+        ${cat.label}
+        <span class="n">${items.length}</span>
+      </div>
+      <div class="kb-col-body"></div>
+    `;
+    const body = col.querySelector('.kb-col-body');
+
+    if(items.length === 0){
+      body.innerHTML = '<div class="kb-empty">nada registrado ainda</div>';
+    } else {
+      items.forEach(entry=>{
+        const el = document.createElement('div');
+        el.className = 'kb-entry';
+        const dt = new Date(entry.data);
+        el.innerHTML = `
+          <div class="tt">${entry.titulo}</div>
+          <div class="tx">${entry.texto}</div>
+          <div class="meta">
+            ${(entry.tabelas||[]).slice(0,4).map(t=>`<span class="tg">${t}</span>`).join('')}
+          </div>
+        `;
+        el.onclick = ()=> openKbDrawer(entry);
+        body.appendChild(el);
+      });
+    }
+    board.appendChild(col);
+  });
+}
+
+document.getElementById('kb-search').addEventListener('input', e=>{
+  kbSearch = e.target.value;
+  renderKbBoard();
+});
+
+function openKbDrawer(entry){
+  const cat = catInfo(entry.categoria);
+  const content = document.getElementById('drawer-content');
+  const dt = new Date(entry.data);
+  content.innerHTML = `
+    <div class="module-tag" style="color:${cat.cor};">${cat.label}</div>
+    <h3 style="margin-top:8px;">${entry.titulo}</h3>
+    <div style="color:var(--text-faint);font-size:11px;font-family:var(--mono);margin-bottom:14px;">
+      ${dt.toLocaleDateString('pt-BR')} · confiança da IA: ${entry.confianca}%
+    </div>
+    <div style="color:var(--text-dim);font-size:13px;line-height:1.6;white-space:pre-wrap;">${entry.texto}</div>
+
+    ${entry.tabelas && entry.tabelas.length ? `
+      <div class="drawer-section">
+        <h4>Tabelas relacionadas</h4>
+        <div class="detected-tags">
+          ${entry.tabelas.map(t=>`<span class="rel-badge" style="cursor:pointer;" data-code="${t}">${t}</span>`).join('')}
+        </div>
+      </div>
+    ` : ''}
+
+    <div class="drawer-section">
+      <button class="btn ghost small" id="kb-delete-btn">Excluir esta informação</button>
+    </div>
+  `;
+  content.querySelectorAll('[data-code]').forEach(el=>{
+    el.onclick = ()=> openDrawer(el.dataset.code);
+  });
+  content.querySelector('#kb-delete-btn').onclick = ()=>{
+    if(confirm('Excluir esta informação da base de conhecimento? Isso remove pra todo mundo que usa o Hub.')){
+      deleteKbEntry(entry.id).then(()=>{
+        closeDrawer();
+      }).catch(err=>{
+        console.error(err);
+        alert('Não consegui excluir. Verifique sua conexão ou as regras do Firestore.');
+      });
+    }
+  };
+  document.getElementById('drawer').classList.add('show');
+  document.getElementById('drawer-backdrop').classList.add('show');
+}
+
+// ---------- export / import ----------
+document.getElementById('kb-export-btn').addEventListener('click', ()=>{
+  const list = loadKB();
+  const blob = new Blob([JSON.stringify(list, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'wms-hub-base-conhecimento.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('kb-import-btn').addEventListener('click', ()=>{
+  document.getElementById('kb-import-file').click();
+});
+document.getElementById('kb-import-file').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const imported = JSON.parse(reader.result);
+      if(!Array.isArray(imported)) throw new Error('formato inválido');
+      const batch = db.batch();
+      imported.forEach(entry=>{
+        const ref = db.collection(KB_COLLECTION).doc(); // novo ID, evita colisão
+        const { id, ...rest } = entry; // não reaproveita o id antigo (localStorage)
+        batch.set(ref, rest);
+      });
+      batch.commit().then(()=>{
+        alert('Base de conhecimento importada com sucesso (' + imported.length + ' registro(s)).');
+      }).catch(err=>{
+        console.error(err);
+        alert('Não consegui importar pra base compartilhada. Verifique as regras do Firestore.');
+      });
+    }catch(err){
+      alert('Não consegui ler esse arquivo. Confirme se é um JSON exportado daqui mesmo.');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
+
+// ---------- CHECKLIST DETALHADO ----------
+let checklistOpenIds = new Set();
+
+function renderChecklist(){
+  const container = document.getElementById('checklist-container');
+  container.innerHTML = '';
+
+  // trilhas de boas práticas (introdução)
+  const trilhasWrap = document.createElement('div');
+  trilhasWrap.className = 'trilhas-grid';
+  BOAS_PRATICAS.forEach(trilha=>{
+    const card = document.createElement('div');
+    card.className = 'trilha-card';
+    card.innerHTML = `<h4>${trilha.trilha}</h4>` + trilha.itens.map(it=>`
+      <div class="trilha-item">
+        <div class="tt">${it.titulo}</div>
+        <div class="tx">${it.texto}</div>
+      </div>
+    `).join('');
+    trilhasWrap.appendChild(card);
+  });
+  container.appendChild(trilhasWrap);
+
+  // categorias, agrupadas por macro (ERP / WMS)
+  let lastMacro = null;
+  CHECKLIST_IMPLANTACAO.forEach((cat, idx)=>{
+    if(cat.macro !== lastMacro){
+      const label = document.createElement('div');
+      label.className = 'macro-label';
+      label.textContent = cat.macro === 'ERP' ? 'Configurações no ERP (pré-requisito)' : 'Configurações no WMS';
+      container.appendChild(label);
+      lastMacro = cat.macro;
+    }
+
+    const totalItens = cat.subsecoes.reduce((s,sub)=>s+sub.itens.length,0);
+    const catId = 'chk-cat-' + idx;
+    const block = document.createElement('div');
+    block.className = 'chk-cat' + (checklistOpenIds.has(catId) ? ' open' : '');
+    block.id = catId;
+
+    const head = document.createElement('div');
+    head.className = 'chk-cat-head';
+    head.innerHTML = `<span>${cat.categoria}</span><span class="n">${totalItens} item(ns)</span><span class="chev">▶</span>`;
+    head.onclick = ()=>{
+      block.classList.toggle('open');
+      if(block.classList.contains('open')) checklistOpenIds.add(catId);
+      else checklistOpenIds.delete(catId);
+    };
+
+    const body = document.createElement('div');
+    body.className = 'chk-cat-body';
+    cat.subsecoes.forEach(sub=>{
+      if(sub.titulo){
+        body.innerHTML += `<div class="chk-sub-label">${sub.titulo}</div>`;
+      }
+      sub.itens.forEach(it=>{
+        const metaBits = [];
+        if(it.rotina) metaBits.push(`<span class="rt">${it.rotina}</span>`);
+        if(it.vinculo) metaBits.push(`<span class="vc">↔ ${it.vinculo}</span>`);
+        if(it.campo) metaBits.push(`<span>campo: ${it.campo}</span>`);
+        body.innerHTML += `
+          <div class="chk-item">
+            <div class="it">${it.item}</div>
+            ${metaBits.length ? `<div class="meta-row">${metaBits.join('')}</div>` : ''}
+            ${it.obs ? `<div class="obs">${it.obs}</div>` : ''}
+          </div>
+        `;
+      });
+    });
+
+    block.appendChild(head);
+    block.appendChild(body);
+    container.appendChild(block);
+  });
+}
+
+// ---------- init ----------
+fillStats();
+initKbListener();
+goToView('home');
+
+</script>
 </body>
 </html>
